@@ -1,0 +1,57 @@
+---
+title: "Installation and Setup"
+description: "Setting up your Next.js development environment"
+date: "2024-01-15"
+order: 1
+draft: false
+---
+
+# Installation and Setup
+
+Let's get your Next.js development environment up and running!
+
+## Creating a New Project
+
+The easiest way to start is with `create-next-app`:
+
+```bash
+npx create-next-app@latest my-app
+cd my-app
+npm run dev
+```
+
+This will create a new Next.js project with all the necessary dependencies.
+
+## Project Structure
+
+After creation, you'll see this structure:
+
+```
+my-app/
+├── src/
+│   ├── app/
+│   │   ├── layout.tsx
+│   │   └── page.tsx
+│   └── ...
+├── public/
+├── package.json
+└── next.config.ts
+```
+
+## Development Server
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser to see your app!
+
+## Key Files
+
+- **`app/layout.tsx`**: Root layout component
+- **`app/page.tsx`**: Home page
+- **`next.config.ts`**: Next.js configuration
+
+That's it! You're ready to start building.

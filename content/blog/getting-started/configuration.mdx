@@ -1,0 +1,56 @@
+---
+title: "Configuration and Customization"
+description: "Customize your Next.js application"
+date: "2024-01-15"
+order: 2
+draft: false
+---
+
+# Configuration and Customization
+
+Now that we have Next.js installed, let's customize it for your needs.
+
+## Next.js Configuration
+
+The `next.config.ts` file controls Next.js behavior:
+
+```typescript
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  reactStrictMode: true,
+  // Add your custom config here
+};
+
+export default nextConfig;
+```
+
+## TypeScript Configuration
+
+Next.js includes TypeScript support out of the box. The `tsconfig.json` file is automatically generated.
+
+## Environment Variables
+
+Create a `.env.local` file for local development:
+
+```bash
+NEXT_PUBLIC_API_URL=https://api.example.com
+```
+
+Access it in your code:
+
+```typescript
+const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+```
+
+## Styling Options
+
+Next.js supports multiple styling approaches:
+
+- **CSS Modules**: Scoped CSS files
+- **Tailwind CSS**: Utility-first CSS framework
+- **CSS-in-JS**: Libraries like styled-components
+
+## Next Steps
+
+You're now ready to build your first real application! Continue to the next section to start building.
