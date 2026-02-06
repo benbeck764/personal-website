@@ -356,7 +356,7 @@ export const PhoenixTimeline = ({
                           label={`View ${experience.companyName} - ${experience.roles[lastRoleIndex]?.title || "First Role"}`}
                           variant="company"
                         />
-                        <span className="-translate-y-1/2 absolute top-1/2 right-[calc(100%+0.75rem)] whitespace-nowrap font-medium text-foreground/60 text-sm tabular-nums">
+                        <span className="-translate-y-1/2 absolute top-1/2 right-[calc(100%+0.75rem)] whitespace-nowrap font-semibold text-foreground/70 text-lg tabular-nums">
                           {formatDate(
                             experience.roles[lastRoleIndex]?.startDate ||
                               new Date(),
