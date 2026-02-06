@@ -132,60 +132,125 @@ export function PhoenixIcon({ className }: { className?: string }) {
         opacity="0.15"
       />
 
-      {/* Head - slightly larger, confident tilt */}
-      <ellipse
-        cx="105"
-        cy="55"
-        rx="14"
-        ry="16"
-        fill="#FFB800"
-        transform="rotate(-5 105 55)"
+      {/* Neck feathers - connecting head to body */}
+      <path
+        d="M95 65 Q92 68 90 72 Q88 76 87 80"
+        stroke="#FF8C00"
+        strokeWidth="2"
+        fill="none"
+        opacity="0.6"
+        strokeLinecap="round"
       />
-      {/* Head shading */}
-      <ellipse
-        cx="103"
-        cy="54"
-        rx="10"
-        ry="12"
-        fill="#FFCC33"
-        opacity="0.25"
-        transform="rotate(-5 105 55)"
+      <path
+        d="M100 64 Q98 68 97 73 Q96 78 95 82"
+        stroke="#FFB800"
+        strokeWidth="2"
+        fill="none"
+        opacity="0.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M110 64 Q112 68 113 73 Q114 78 115 82"
+        stroke="#FFB800"
+        strokeWidth="2"
+        fill="none"
+        opacity="0.5"
+        strokeLinecap="round"
+      />
+      <path
+        d="M115 65 Q118 68 120 72 Q122 76 123 80"
+        stroke="#FF8C00"
+        strokeWidth="2"
+        fill="none"
+        opacity="0.6"
+        strokeLinecap="round"
       />
 
-      {/* Eye - determined, stylized */}
+      {/* Head - larger, powerful, confident tilt */}
       <ellipse
-        cx="99"
-        cy="51"
-        rx="3.5"
-        ry="3"
-        fill="#0a0a0a"
-        transform="rotate(-5 99 51)"
+        cx="105"
+        cy="52"
+        rx="16"
+        ry="18"
+        fill="#FFB800"
+        transform="rotate(-5 105 52)"
       />
-      <ellipse cx="98.5" cy="50" rx="1.2" ry="1" fill="#fff" />
-      {/* Eyebrow line - gives fierce but cute look */}
+      {/* Head shading layers for depth */}
+      <ellipse
+        cx="103"
+        cy="51"
+        rx="12"
+        ry="14"
+        fill="#FFCC33"
+        opacity="0.3"
+        transform="rotate(-5 103 51)"
+      />
+      <ellipse
+        cx="102"
+        cy="50"
+        rx="8"
+        ry="10"
+        fill="#FFD700"
+        opacity="0.2"
+        transform="rotate(-5 102 50)"
+      />
+
+      {/* Eye - intense, determined */}
+      <ellipse
+        cx="98"
+        cy="48"
+        rx="4"
+        ry="3.5"
+        fill="#0a0a0a"
+        transform="rotate(-5 98 48)"
+      />
+      <ellipse cx="97.5" cy="47" rx="1.5" ry="1.2" fill="#fff" />
+      <ellipse cx="97.2" cy="46.7" rx="0.6" ry="0.5" fill="#FFD700" />
+
+      {/* Eyebrow line - fierce expression */}
       <path
-        d="M94 47 Q99 45 103 47"
+        d="M92 44 Q97 42 102 43"
         stroke="#CC5500"
-        strokeWidth="1.5"
+        strokeWidth="2"
         fill="none"
         strokeLinecap="round"
       />
 
-      {/* Beak - sharper, angled up confidently */}
-      <path d="M113 52 L124 48 L113 54 Z" fill="#FF5500" />
+      {/* Eye detail line - adds intensity */}
       <path
-        d="M113 52 L124 48 L120 50"
+        d="M95 50 Q97 52 100 51"
+        stroke="#0a0a0a"
+        strokeWidth="0.8"
+        fill="none"
+        opacity="0.4"
+        strokeLinecap="round"
+      />
+
+      {/* Beak - larger, more prominent, powerful */}
+      <path d="M115 50 L128 45 L115 53 Z" fill="#FF5500" />
+      <path d="M115 51 L128 45 L115 52 Z" fill="#CC3300" opacity="0.4" />
+      <path
+        d="M115 50 L128 45 L123 47"
         stroke="#FFD700"
+        strokeWidth="1"
+        fill="none"
+        opacity="0.6"
+      />
+      {/* Beak detail */}
+      <path
+        d="M115 51 L120 49"
+        stroke="#FF8C00"
         strokeWidth="0.5"
         fill="none"
         opacity="0.5"
       />
 
-      {/* Crown feathers - taller, more dramatic */}
+      {/* Crown feathers - much more dramatic and flowing */}
+      {/* Main center plume - tallest */}
       <path
-        d="M96 40 Q90 22 84 8"
+        d="M105 36 Q105 20 105 5 Q103 8 105 12"
         stroke="#FFD700"
-        strokeWidth="2.5"
+        strokeWidth="3"
         fill="none"
         strokeLinecap="round"
       >
@@ -193,13 +258,17 @@ export function PhoenixIcon({ className }: { className?: string }) {
           attributeName="d"
           dur="2.5s"
           repeatCount="indefinite"
-          values="M96 40 Q90 22 84 8;M96 40 Q89 20 82 5;M96 40 Q90 22 84 8"
+          values="M105 36 Q105 20 105 5 Q103 8 105 12;
+                  M105 36 Q104 18 103 2 Q101 6 103 11;
+                  M105 36 Q105 20 105 5 Q103 8 105 12"
         />
       </path>
+
+      {/* Left main plume */}
       <path
-        d="M102 38 Q101 18 100 3"
+        d="M98 38 Q92 24 86 10 Q88 13 90 16"
         stroke="#FFB800"
-        strokeWidth="2.5"
+        strokeWidth="2.8"
         fill="none"
         strokeLinecap="round"
       >
@@ -207,13 +276,17 @@ export function PhoenixIcon({ className }: { className?: string }) {
           attributeName="d"
           dur="2.5s"
           repeatCount="indefinite"
-          values="M102 38 Q101 18 100 3;M102 38 Q102 16 102 0;M102 38 Q101 18 100 3"
+          values="M98 38 Q92 24 86 10 Q88 13 90 16;
+                  M98 38 Q90 22 83 7 Q85 11 88 15;
+                  M98 38 Q92 24 86 10 Q88 13 90 16"
         />
       </path>
+
+      {/* Right main plume */}
       <path
-        d="M108 40 Q113 22 118 8"
+        d="M112 38 Q118 24 124 10 Q122 13 120 16"
         stroke="#FF8C00"
-        strokeWidth="2.5"
+        strokeWidth="2.8"
         fill="none"
         strokeLinecap="round"
       >
@@ -221,25 +294,44 @@ export function PhoenixIcon({ className }: { className?: string }) {
           attributeName="d"
           dur="2.5s"
           repeatCount="indefinite"
-          values="M108 40 Q113 22 118 8;M108 40 Q114 20 120 5;M108 40 Q113 22 118 8"
+          values="M112 38 Q118 24 124 10 Q122 13 120 16;
+                  M112 38 Q120 22 127 7 Q125 11 122 15;
+                  M112 38 Q118 24 124 10 Q122 13 120 16"
         />
       </path>
-      {/* Extra small crown wisps */}
+
+      {/* Additional flowing plumes */}
       <path
-        d="M99 40 Q95 28 90 18"
+        d="M94 39 Q88 28 82 18"
         stroke="#FFCC00"
-        strokeWidth="1.2"
+        strokeWidth="2"
         fill="none"
         strokeLinecap="round"
-        opacity="0.5"
+        opacity="0.7"
       />
       <path
-        d="M106 40 Q110 28 114 18"
-        stroke="#FF9900"
-        strokeWidth="1.2"
+        d="M101 37 Q98 25 95 14"
+        stroke="#FFD700"
+        strokeWidth="1.8"
         fill="none"
         strokeLinecap="round"
-        opacity="0.5"
+        opacity="0.6"
+      />
+      <path
+        d="M109 37 Q112 25 115 14"
+        stroke="#FF9900"
+        strokeWidth="1.8"
+        fill="none"
+        strokeLinecap="round"
+        opacity="0.6"
+      />
+      <path
+        d="M116 39 Q122 28 128 18"
+        stroke="#FF9900"
+        strokeWidth="2"
+        fill="none"
+        strokeLinecap="round"
+        opacity="0.7"
       />
 
       {/* Tail feathers - flowing, flame-like phoenix tail */}
