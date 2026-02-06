@@ -5,7 +5,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { AnimatedPhoenix } from "./animated-phoenix";
 import { TimelineMilestone } from "./timeline-milestone";
-import { TimelineYearMarker } from "./timeline-year-marker";
+
+// Format date as "Mon YYYY" (e.g., "Dec 2023")
+const formatDate = (date: Date): string => {
+  const month = date.toLocaleString("en-US", { month: "short" });
+  const year = date.getFullYear();
+  return `${month} ${year}`;
+};
 
 export type TimelineExperience = {
   id: string;
@@ -222,29 +228,11 @@ export const PhoenixTimeline = ({
     <div ref={containerRef} className={cn("relative w-full", className)}>
       {/* Timeline Layout */}
       <div className="grid grid-cols-[auto_1fr] gap-8 md:grid-cols-[10%_20%_70%] md:gap-4">
-        {/* Year Column */}
-        <div className="relative" style={{ minHeight: "100vh" }}>
-          {Array.from(milestonePositions.entries())
-            .filter(([key]) => key.startsWith("company-"))
-            .map(([key, position]) => {
-              const companyIndex = Number.parseInt(
-                key.split("-")[1] ?? "0",
-                10,
-              );
-              const experience = experiences[companyIndex];
-              if (!experience) return null;
-
-              return (
-                <div
-                  key={`year-${key}`}
-                  className="absolute flex items-start pt-2"
-                  style={{ top: `${position.top}px` }}
-                >
-                  <TimelineYearMarker year={position.year} />
-                </div>
-              );
-            })}
-        </div>
+        {/* Spacer Column (optional) */}
+        <div
+          className="relative hidden md:block"
+          style={{ minHeight: "100vh" }}
+        />
 
         {/* Timeline Column */}
         <div ref={timelineRef} className="relative">
@@ -273,29 +261,37 @@ export const PhoenixTimeline = ({
                   return position ? (
                     <div
                       className="absolute"
-                      style={{ top: `${position.top}px` }}
+                      style={{ top: `${position.top}px`, left: 0 }}
                     >
-                      <TimelineMilestone
-                        ref={(el) => {
-                          milestoneRefs.current.set(
-                            `company-${companyIndex}`,
-                            el,
-                          );
-                        }}
-                        isActive={
-                          activeCompanyIndex === companyIndex &&
-                          (activeRoleIndex[companyIndex] ?? 0) === lastRoleIndex
-                        }
-                        onClick={() => {
-                          setActiveCompanyIndex(companyIndex);
-                          setActiveRoleIndex((prev) => ({
-                            ...prev,
-                            [companyIndex]: lastRoleIndex,
-                          }));
-                        }}
-                        label={`View ${experience.companyName} - ${experience.roles[lastRoleIndex]?.title || "First Role"}`}
-                        variant="company"
-                      />
+                      <div className="relative">
+                        <TimelineMilestone
+                          ref={(el) => {
+                            milestoneRefs.current.set(
+                              `company-${companyIndex}`,
+                              el,
+                            );
+                          }}
+                          isActive={
+                            activeCompanyIndex === companyIndex &&
+                            (activeRoleIndex[companyIndex] ?? 0) === lastRoleIndex
+                          }
+                          onClick={() => {
+                            setActiveCompanyIndex(companyIndex);
+                            setActiveRoleIndex((prev) => ({
+                              ...prev,
+                              [companyIndex]: lastRoleIndex,
+                            }));
+                          }}
+                          label={`View ${experience.companyName} - ${experience.roles[lastRoleIndex]?.title || "First Role"}`}
+                          variant="company"
+                        />
+                        <span className="absolute top-1/2 right-[calc(100%+0.75rem)] -translate-y-1/2 whitespace-nowrap font-medium text-foreground/60 text-sm tabular-nums">
+                          {formatDate(
+                            experience.roles[lastRoleIndex]?.startDate ||
+                              new Date(),
+                          )}
+                        </span>
+                      </div>
                     </div>
                   ) : null;
                 })()}
@@ -311,8 +307,8 @@ export const PhoenixTimeline = ({
                     return rolePosition ? (
                       <div
                         key={`role-milestone-${experience.id}-${role.title}`}
-                        className="absolute"
-                        style={{ top: `${rolePosition.top}px` }}
+                        className="absolute flex items-center gap-3"
+                        style={{ top: `${rolePosition.top}px`, left: "8px" }}
                       >
                         <TimelineMilestone
                           ref={(el) => {
@@ -335,6 +331,9 @@ export const PhoenixTimeline = ({
                           label={`View ${role.title} role at ${experience.companyName}`}
                           variant="role"
                         />
+                        <span className="font-medium text-foreground/60 text-sm tabular-nums">
+                          {formatDate(role.startDate)}
+                        </span>
                       </div>
                     ) : null;
                   })}

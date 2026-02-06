@@ -63,7 +63,7 @@ export const experienceTimeline: TimelineExperience[] = [
     companyName: "BenBeck.dev",
     roles: [
       {
-        title: "Technical Architect",
+        title: "Software Architect",
         accomplishments: [
           "Designed and implemented an efficient ordering portal for a major food distribution company, improving their operational efficiency.",
           "Led and supervised a dynamic team of 5-10 developers, providing guidance and support to enhance their professional growth.",
@@ -80,7 +80,7 @@ export const experienceTimeline: TimelineExperience[] = [
       <ExperienceInfo
         roles={[
           {
-            title: "Technical Architect",
+            title: "Software Architect",
             accomplishments: [
               "Designed and implemented an efficient ordering portal for a major food distribution company, improving their operational efficiency.",
               "Led and supervised a dynamic team of 5-10 developers, providing guidance and support to enhance their professional growth.",
