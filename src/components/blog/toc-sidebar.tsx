@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import type { TOCHeading } from "@/types/blog";
 
-interface TOCSidebarProps {
+type TOCSidebarProps = {
   headings: TOCHeading[];
-}
+};
 
 export function TOCSidebar({ headings }: TOCSidebarProps) {
   const [activeId, setActiveId] = useState<string>("");

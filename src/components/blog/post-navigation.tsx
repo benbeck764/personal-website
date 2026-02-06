@@ -2,10 +2,10 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-interface PostNavigationProps {
+type PostNavigationProps = {
   prev: { slug: string; title: string } | null;
   next: { slug: string; title: string } | null;
-}
+};
 
 export function PostNavigation({ prev, next }: PostNavigationProps) {
   return (

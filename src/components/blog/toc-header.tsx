@@ -5,9 +5,9 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import type { TOCHeading } from "@/types/blog";
 
-interface TOCHeaderProps {
+type TOCHeaderProps = {
   headings: TOCHeading[];
-}
+};
 
 export function TOCHeader({ headings }: TOCHeaderProps) {
   const [isOpen, setIsOpen] = useState(false);

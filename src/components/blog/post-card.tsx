@@ -5,10 +5,10 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import type { BlogPost } from "@/types/blog";
 
-interface PostCardProps {
+type PostCardProps = {
   post: BlogPost;
   combinedReadingTime?: number;
-}
+};
 
 export function PostCard({ post, combinedReadingTime }: PostCardProps) {
   const { frontmatter, readingTime, slug } = post;

@@ -21,9 +21,9 @@ import {
   getPostWithSubposts,
 } from "@/lib/blog/posts";
 
-interface PageProps {
+type PageProps = {
   params: Promise<{ slug: string }>;
-}
+};
 
 export async function generateStaticParams() {
   const ids = getAllPostIds();

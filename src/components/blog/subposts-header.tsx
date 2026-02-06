@@ -6,11 +6,11 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import type { BlogPost } from "@/types/blog";
 
-interface SubpostsHeaderProps {
+type SubpostsHeaderProps = {
   parentPost: BlogPost;
   subposts: BlogPost[];
   currentId: string;
-}
+};
 
 export function SubpostsHeader({
   parentPost,

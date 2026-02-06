@@ -2,11 +2,11 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import type { BlogPost } from "@/types/blog";
 
-interface SubpostsSidebarProps {
+type SubpostsSidebarProps = {
   parentPost: BlogPost;
   subposts: BlogPost[];
   currentId: string;
-}
+};
 
 export function SubpostsSidebar({
   parentPost,
