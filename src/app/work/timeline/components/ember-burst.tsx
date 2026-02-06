@@ -52,7 +52,8 @@ export const EmberBurst = ({ x, y, onComplete }: EmberBurstProps) => {
             key={ember.id}
             className="absolute h-2 w-2 rounded-full bg-accent-ember"
             style={{
-              boxShadow: "0 0 8px rgba(234, 88, 12, 0.8), 0 0 12px rgba(245, 158, 11, 0.4)",
+              boxShadow:
+                "0 0 8px rgba(234, 88, 12, 0.8), 0 0 12px rgba(245, 158, 11, 0.4)",
               animation: "ember-burst 1.5s ease-out forwards",
               // @ts-expect-error - CSS custom properties
               "--ember-x": `${deltaX}px`,

@@ -1,40 +1,34 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { cn } from "@/lib/utils";
-import type { TimelineExperience } from "../types";
-import { formatDate } from "../utils";
-import { AnimatedPhoenix } from "./animated-phoenix";
-import { EmberBurst } from "./ember-burst";
-import { ExperienceInfo } from "./experience-info";
-import { TimelineMilestone } from "./timeline-milestone";
 
-// Re-export for convenience
-export type { TimelineExperience };
-
-type PhoenixTimelineProps = {
-  experiences: TimelineExperience[];
-  className?: string;
-};
+import "./timeline.css";
+import { AnimatedPhoenix } from "./components/animated-phoenix";
+import { EmberBurst } from "./components/ember-burst";
+import { ExperienceInfo } from "./components/experience-info";
+import { TimelineMilestone } from "./components/timeline-milestone";
+import { experienceTimeline } from "./data";
+import type { MilestoneKey } from "./types";
+import { milestoneKey } from "./types";
+import { formatDate } from "./utils";
 
 type MilestonePosition = {
   top: number;
   year: number;
 };
 
-export const PhoenixTimeline = ({
-  experiences,
-  className,
-}: PhoenixTimelineProps) => {
+export const Timeline = () => {
+  const experiences = experienceTimeline;
+
   const [activeCompanyIndex, setActiveCompanyIndex] = useState(0);
   const [activeRoleIndex, setActiveRoleIndex] = useState<
     Record<number, number>
   >(
-    { 0: 0 }, // Start with True Anomaly's first role (Principal)
+    { 0: 0 }, // Start with latest role of latest company
   );
   const [phoenixPosition, setPhoenixPosition] = useState({ x: 0, y: 0 });
   const [milestonePositions, setMilestonePositions] = useState<
-    Map<string, MilestonePosition>
+    Map<MilestoneKey, MilestonePosition>
   >(new Map());
   const [emberBursts, setEmberBursts] = useState<
     Array<{ id: string; x: number; y: number }>
@@ -43,7 +37,7 @@ export const PhoenixTimeline = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const timelineRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<Map<string, HTMLDivElement | null>>(new Map());
-  const milestoneRefs = useRef<Map<string, HTMLButtonElement | null>>(
+  const milestoneRefs = useRef<Map<MilestoneKey, HTMLButtonElement | null>>(
     new Map(),
   );
   const prevMilestoneRef = useRef({ companyIndex: 0, roleIndex: 0 });
@@ -52,7 +46,7 @@ export const PhoenixTimeline = ({
   const calculatePositions = useCallback(() => {
     if (!containerRef.current || !timelineRef.current) return;
 
-    const newPositions = new Map<string, MilestonePosition>();
+    const newPositions = new Map<MilestoneKey, MilestonePosition>();
     const containerRect = containerRef.current.getBoundingClientRect();
 
     experiences.forEach((experience, companyIndex) => {
@@ -64,7 +58,7 @@ export const PhoenixTimeline = ({
         const topPosition = cardRect.top - containerRect.top;
 
         // Company milestone position
-        newPositions.set(`company-${companyIndex}`, {
+        newPositions.set(milestoneKey.company(companyIndex), {
           top: topPosition,
           year: experience.startYear,
         });
@@ -90,7 +84,7 @@ export const PhoenixTimeline = ({
             const positionRatio = timeSpan > 0 ? timeOffset / timeSpan : 0;
             const roleTopOffset = positionRatio * cardHeight;
 
-            newPositions.set(`role-${companyIndex}-${roleIndex}`, {
+            newPositions.set(milestoneKey.role(companyIndex, roleIndex), {
               top: topPosition + roleTopOffset,
               year: role.startDate.getFullYear(),
             });
@@ -103,8 +97,8 @@ export const PhoenixTimeline = ({
   }, [experiences]);
 
   // Spawn ember burst effect
-  const spawnEmberBurst = useCallback((milestoneKey: string) => {
-    const milestone = milestoneRefs.current.get(milestoneKey);
+  const spawnEmberBurst = useCallback((key: MilestoneKey) => {
+    const milestone = milestoneRefs.current.get(key);
     const container = containerRef.current;
     if (!milestone || !container) return;
 
@@ -137,10 +131,13 @@ export const PhoenixTimeline = ({
 
     // Last role (first chronologically) uses company milestone, others use role milestones
     if (activeRoleIdx === lastRoleIndex) {
-      const companyMilestoneKey = `company-${activeCompanyIndex}`;
+      const companyMilestoneKey = milestoneKey.company(activeCompanyIndex);
       activeMilestone = milestoneRefs.current.get(companyMilestoneKey) ?? null;
     } else {
-      const roleMilestoneKey = `role-${activeCompanyIndex}-${activeRoleIdx}`;
+      const roleMilestoneKey = milestoneKey.role(
+        activeCompanyIndex,
+        activeRoleIdx,
+      );
       activeMilestone = milestoneRefs.current.get(roleMilestoneKey) ?? null;
     }
 
@@ -220,7 +217,7 @@ export const PhoenixTimeline = ({
         const lastRoleIndex = experience.roles.length - 1;
 
         // Check company milestone (always at last role position)
-        const companyKey = `company-${companyIndex}`;
+        const companyKey = milestoneKey.company(companyIndex);
         const companyMilestone = milestoneRefs.current.get(companyKey);
         if (companyMilestone) {
           const rect = companyMilestone.getBoundingClientRect();
@@ -239,7 +236,7 @@ export const PhoenixTimeline = ({
         // Check role sub-milestones (all roles except last)
         if (experience.roles.length > 1) {
           experience.roles.slice(0, -1).forEach((_, roleIndex) => {
-            const roleKey = `role-${companyIndex}-${roleIndex}`;
+            const roleKey = milestoneKey.role(companyIndex, roleIndex);
             const roleMilestone = milestoneRefs.current.get(roleKey);
             if (roleMilestone) {
               const rect = roleMilestone.getBoundingClientRect();
@@ -276,11 +273,11 @@ export const PhoenixTimeline = ({
 
           // Spawn ember burst on scroll activation
           const lastRoleIndex = experiences[companyIndex].roles.length - 1;
-          const milestoneKey =
+          const activeMilestoneKey =
             roleIndex === lastRoleIndex
-              ? `company-${companyIndex}`
-              : `role-${companyIndex}-${roleIndex}`;
-          spawnEmberBurst(milestoneKey);
+              ? milestoneKey.company(companyIndex)
+              : milestoneKey.role(companyIndex, roleIndex);
+          spawnEmberBurst(activeMilestoneKey);
 
           // Update previous milestone
           prevMilestoneRef.current = { companyIndex, roleIndex };
@@ -299,7 +296,7 @@ export const PhoenixTimeline = ({
   }, [milestonePositions, experiences, spawnEmberBurst]);
 
   return (
-    <div ref={containerRef} className={cn("relative w-full", className)}>
+    <div ref={containerRef} className="relative w-full">
       {/* Timeline Layout */}
       <div className="grid grid-cols-[60px_1fr] gap-4 md:grid-cols-[10%_20%_70%] md:gap-4">
         {/* Spacer Column (optional) */}
@@ -316,7 +313,7 @@ export const PhoenixTimeline = ({
           {/* Company Milestones */}
           {experiences.map((experience, companyIndex) => {
             const companyPosition = milestonePositions.get(
-              `company-${companyIndex}`,
+              milestoneKey.company(companyIndex),
             );
 
             return (
@@ -328,7 +325,7 @@ export const PhoenixTimeline = ({
                   const position =
                     experience.roles.length > 1
                       ? milestonePositions.get(
-                          `role-${companyIndex}-${lastRoleIndex}`,
+                          milestoneKey.role(companyIndex, lastRoleIndex),
                         )
                       : companyPosition;
 
@@ -341,7 +338,7 @@ export const PhoenixTimeline = ({
                         <TimelineMilestone
                           ref={(el) => {
                             milestoneRefs.current.set(
-                              `company-${companyIndex}`,
+                              milestoneKey.company(companyIndex),
                               el,
                             );
                           }}
@@ -356,7 +353,7 @@ export const PhoenixTimeline = ({
                               ...prev,
                               [companyIndex]: lastRoleIndex,
                             }));
-                            spawnEmberBurst(`company-${companyIndex}`);
+                            spawnEmberBurst(milestoneKey.company(companyIndex));
                           }}
                           label={`View ${experience.companyName} - ${experience.roles[lastRoleIndex]?.title || "First Role"}`}
                           variant="company"
@@ -377,7 +374,7 @@ export const PhoenixTimeline = ({
                   experience.roles.slice(0, -1).map((role, roleIndex) => {
                     // roleIndex is 0 to length-2
                     const rolePosition = milestonePositions.get(
-                      `role-${companyIndex}-${roleIndex}`,
+                      milestoneKey.role(companyIndex, roleIndex),
                     );
 
                     return rolePosition ? (
@@ -392,7 +389,7 @@ export const PhoenixTimeline = ({
                         <TimelineMilestone
                           ref={(el) => {
                             milestoneRefs.current.set(
-                              `role-${companyIndex}-${roleIndex}`,
+                              milestoneKey.role(companyIndex, roleIndex),
                               el,
                             );
                           }}
@@ -407,7 +404,7 @@ export const PhoenixTimeline = ({
                               [companyIndex]: roleIndex,
                             }));
                             spawnEmberBurst(
-                              `role-${companyIndex}-${roleIndex}`,
+                              milestoneKey.role(companyIndex, roleIndex),
                             );
                           }}
                           label={`View ${role.title} role at ${experience.companyName}`}
@@ -449,12 +446,11 @@ export const PhoenixTimeline = ({
             >
               {/* Experience Content */}
               <div
-                className={cn(
-                  "transition-all duration-300",
+                className={`transition-all duration-300 ${
                   activeCompanyIndex === companyIndex
                     ? "opacity-100"
-                    : "opacity-50 hover:opacity-75",
-                )}
+                    : "opacity-50 hover:opacity-75"
+                }`}
               >
                 <ExperienceInfo
                   roles={experience.roles}
