@@ -70,7 +70,7 @@ export default function HomePage() {
         <p className="mb-3 font-heading text-accent text-xl tracking-wider">
           PARADIGM
         </p>
-        <p className="mb-8 text-foreground/60 text-lg font-light uppercase tracking-[0.35em]">
+        <p className="mb-8 font-light text-foreground/60 text-lg uppercase tracking-[0.35em]">
           Rise · Evolve · Transform
         </p>
         <div className="flex justify-center gap-4">

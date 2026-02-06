@@ -1,4 +1,6 @@
 import { Container } from "@/components/layout/container";
+import { PhoenixTimeline } from "./components/phoenix-timeline";
+import { experienceTimeline } from "./experience-data";
 
 export const metadata = {
   title: "Work",
@@ -25,9 +27,7 @@ export default function WorkPage() {
         {/* Experience Section */}
         <section>
           <h2 className="mb-8 font-bold font-heading text-3xl">Experience</h2>
-          <p className="text-foreground/70">
-            Experience content coming soon...
-          </p>
+          <PhoenixTimeline experiences={experienceTimeline} />
         </section>
       </div>
     </Container>

@@ -13,7 +13,10 @@ export function PhoenixIcon({ className }: { className?: string }) {
         <linearGradient id="fireGrad" x1="0%" y1="100%" x2="50%" y2="0%">
           <stop offset="0%" style={{ stopColor: "#FF4500", stopOpacity: 1 }} />
           <stop offset="40%" style={{ stopColor: "#FF8C00", stopOpacity: 1 }} />
-          <stop offset="100%" style={{ stopColor: "#FFD700", stopOpacity: 1 }} />
+          <stop
+            offset="100%"
+            style={{ stopColor: "#FFD700", stopOpacity: 1 }}
+          />
         </linearGradient>
         <linearGradient id="bodyGrad" x1="0%" y1="100%" x2="100%" y2="0%">
           <stop offset="0%" style={{ stopColor: "#CC3300", stopOpacity: 1 }} />
