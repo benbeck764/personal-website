@@ -6,6 +6,7 @@ import "./timeline.css";
 import { AnimatedPhoenix } from "./components/animated-phoenix";
 import { EmberBurst } from "./components/ember-burst";
 import { ExperienceInfo } from "./components/experience-info";
+import { MilestoneTooltip } from "./components/milestone-tooltip";
 import { TimelineMilestone } from "./components/timeline-milestone";
 import { experienceTimeline } from "./data";
 import type { MilestoneKey } from "./types";
@@ -335,29 +336,33 @@ export const Timeline = () => {
                       style={{ top: `${position.top}px`, left: 0 }}
                     >
                       <div className="relative">
-                        <TimelineMilestone
-                          ref={(el) => {
-                            milestoneRefs.current.set(
-                              milestoneKey.company(companyIndex),
-                              el,
-                            );
-                          }}
-                          isActive={
-                            activeCompanyIndex === companyIndex &&
-                            (activeRoleIndex[companyIndex] ?? 0) ===
-                              lastRoleIndex
-                          }
-                          onClick={() => {
-                            setActiveCompanyIndex(companyIndex);
-                            setActiveRoleIndex((prev) => ({
-                              ...prev,
-                              [companyIndex]: lastRoleIndex,
-                            }));
-                            spawnEmberBurst(milestoneKey.company(companyIndex));
-                          }}
-                          label={`View ${experience.companyName} - ${experience.roles[lastRoleIndex]?.title || "First Role"}`}
-                          variant="company"
-                        />
+                        <MilestoneTooltip
+                          content={`${experience.companyName} - ${experience.roles[lastRoleIndex]?.title || "First Role"}`}
+                        >
+                          <TimelineMilestone
+                            ref={(el) => {
+                              milestoneRefs.current.set(
+                                milestoneKey.company(companyIndex),
+                                el,
+                              );
+                            }}
+                            isActive={
+                              activeCompanyIndex === companyIndex &&
+                              (activeRoleIndex[companyIndex] ?? 0) ===
+                                lastRoleIndex
+                            }
+                            onClick={() => {
+                              setActiveCompanyIndex(companyIndex);
+                              setActiveRoleIndex((prev) => ({
+                                ...prev,
+                                [companyIndex]: lastRoleIndex,
+                              }));
+                              spawnEmberBurst(milestoneKey.company(companyIndex));
+                            }}
+                            label={`View ${experience.companyName} - ${experience.roles[lastRoleIndex]?.title || "First Role"}`}
+                            variant="company"
+                          />
+                        </MilestoneTooltip>
                         <span className="-translate-y-1/2 absolute top-1/2 right-[calc(100%+0.75rem)] hidden whitespace-nowrap font-heading text-foreground/70 text-lg tabular-nums md:inline">
                           {formatDate(
                             experience.roles[lastRoleIndex]?.startDate ||
@@ -386,30 +391,34 @@ export const Timeline = () => {
                           left: "6px",
                         }}
                       >
-                        <TimelineMilestone
-                          ref={(el) => {
-                            milestoneRefs.current.set(
-                              milestoneKey.role(companyIndex, roleIndex),
-                              el,
-                            );
-                          }}
-                          isActive={
-                            activeCompanyIndex === companyIndex &&
-                            (activeRoleIndex[companyIndex] ?? 0) === roleIndex
-                          }
-                          onClick={() => {
-                            setActiveCompanyIndex(companyIndex);
-                            setActiveRoleIndex((prev) => ({
-                              ...prev,
-                              [companyIndex]: roleIndex,
-                            }));
-                            spawnEmberBurst(
-                              milestoneKey.role(companyIndex, roleIndex),
-                            );
-                          }}
-                          label={`View ${role.title} role at ${experience.companyName}`}
-                          variant="role"
-                        />
+                        <MilestoneTooltip
+                          content={`${role.title} at ${experience.companyName}`}
+                        >
+                          <TimelineMilestone
+                            ref={(el) => {
+                              milestoneRefs.current.set(
+                                milestoneKey.role(companyIndex, roleIndex),
+                                el,
+                              );
+                            }}
+                            isActive={
+                              activeCompanyIndex === companyIndex &&
+                              (activeRoleIndex[companyIndex] ?? 0) === roleIndex
+                            }
+                            onClick={() => {
+                              setActiveCompanyIndex(companyIndex);
+                              setActiveRoleIndex((prev) => ({
+                                ...prev,
+                                [companyIndex]: roleIndex,
+                              }));
+                              spawnEmberBurst(
+                                milestoneKey.role(companyIndex, roleIndex),
+                              );
+                            }}
+                            label={`View ${role.title} role at ${experience.companyName}`}
+                            variant="role"
+                          />
+                        </MilestoneTooltip>
                         <span className="hidden font-heading font-medium text-foreground/60 text-sm tabular-nums md:inline">
                           {formatDate(role.startDate)}
                         </span>

@@ -41,7 +41,7 @@ export const AnimatedPhoenix = ({
         className,
       )}
       style={{
-        transform: `translate(${targetPosition.x}px, ${targetPosition.y}px) rotate(${rotation}deg)`,
+        transform: `translate(${targetPosition.x}px, ${targetPosition.y}px) translate(-50%, -50%) rotate(${rotation}deg)`,
         transformOrigin: "center center",
       }}
     >
