@@ -164,49 +164,89 @@ export const PhoenixTimeline = ({
     };
   }, [updatePhoenixPosition]);
 
-  // Scroll-based activation: Activate cards as they come into view
+  // Scroll-based activation: Find nearest milestone to viewport center
   useEffect(() => {
-    // Wait for cards to be positioned before observing
     if (milestonePositions.size === 0) return;
 
-    const cards = Array.from(cardRefs.current.entries());
-    if (cards.length === 0) return;
+    const handleScrollActivation = () => {
+      // If at the very top of the page, keep the default state (latest role of latest company)
+      if (window.scrollY === 0) {
+        setActiveCompanyIndex(0);
+        setActiveRoleIndex((prev) => ({ ...prev, 0: 0 }));
+        return;
+      }
 
-    const observerOptions = {
-      root: null,
-      rootMargin: "-40% 0px -40% 0px", // Trigger when card is in middle 20% of viewport
-      threshold: 0,
-    };
+      const viewportCenter = window.innerHeight / 2;
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          // Find which card index this is
-          const cardElement = entry.target;
-          const cardEntry = cards.find(([, el]) => el === cardElement);
-          if (cardEntry) {
-            const [key] = cardEntry;
-            const companyIndex = Number.parseInt(key.split("-")[1] ?? "0", 10);
-            setActiveCompanyIndex(companyIndex);
-            // Reset to first role when auto-activating via scroll
-            setActiveRoleIndex((prev) => ({
-              ...prev,
-              [companyIndex]: 0,
-            }));
+      // Find the milestone closest to viewport center
+      let closestMilestone: {
+        companyIndex: number;
+        roleIndex: number;
+        distance: number;
+      } | null = null;
+
+      experiences.forEach((experience, companyIndex) => {
+        const lastRoleIndex = experience.roles.length - 1;
+
+        // Check company milestone (always at last role position)
+        const companyKey = `company-${companyIndex}`;
+        const companyMilestone = milestoneRefs.current.get(companyKey);
+        if (companyMilestone) {
+          const rect = companyMilestone.getBoundingClientRect();
+          const milestoneCenter = rect.top + rect.height / 2;
+          const distance = Math.abs(milestoneCenter - viewportCenter);
+
+          if (!closestMilestone || distance < closestMilestone.distance) {
+            closestMilestone = {
+              companyIndex,
+              roleIndex: lastRoleIndex,
+              distance,
+            };
           }
         }
-      });
-    }, observerOptions);
 
-    // Observe all cards
-    cards.forEach(([, card]) => {
-      if (card) observer.observe(card);
+        // Check role sub-milestones (all roles except last)
+        if (experience.roles.length > 1) {
+          experience.roles.slice(0, -1).forEach((_, roleIndex) => {
+            const roleKey = `role-${companyIndex}-${roleIndex}`;
+            const roleMilestone = milestoneRefs.current.get(roleKey);
+            if (roleMilestone) {
+              const rect = roleMilestone.getBoundingClientRect();
+              const milestoneCenter = rect.top + rect.height / 2;
+              const distance = Math.abs(milestoneCenter - viewportCenter);
+
+              if (!closestMilestone || distance < closestMilestone.distance) {
+                closestMilestone = {
+                  companyIndex,
+                  roleIndex,
+                  distance,
+                };
+              }
+            }
+          });
+        }
+      });
+
+      // Activate the closest milestone
+      if (closestMilestone) {
+        const { companyIndex, roleIndex } = closestMilestone;
+        setActiveCompanyIndex(companyIndex);
+        setActiveRoleIndex((prev) => ({
+          ...prev,
+          [companyIndex]: roleIndex,
+        }));
+      }
+    };
+
+    // Run on scroll only (no initial timeout to prevent jump on load)
+    window.addEventListener("scroll", handleScrollActivation, {
+      passive: true,
     });
 
     return () => {
-      observer.disconnect();
+      window.removeEventListener("scroll", handleScrollActivation);
     };
-  }, [milestonePositions]);
+  }, [milestonePositions, experiences]);
 
   return (
     <div ref={containerRef} className={cn("relative w-full", className)}>
