@@ -1,4 +1,4 @@
-import type { TimelineExperience } from "./components/phoenix-timeline";
+import type { TimelineExperience } from "./types";
 
 // Clean, structured experience data
 export const experienceTimeline: TimelineExperience[] = [

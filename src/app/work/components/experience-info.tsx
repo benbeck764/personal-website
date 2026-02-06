@@ -1,14 +1,8 @@
-import { format } from "date-fns";
 import { ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-
-type Role = {
-  title: string;
-  accomplishments: string[];
-  startDate: Date;
-  endDate?: Date;
-};
+import type { Role } from "../types";
+import { formatDateRange } from "../utils";
 
 type ExperienceInfoProps = {
   roles: Role[];
@@ -19,12 +13,6 @@ type ExperienceInfoProps = {
   technologies: string[];
   contract?: boolean;
   internship?: boolean;
-};
-
-const formatDateRange = (startDate: Date, endDate?: Date): string => {
-  const start = format(startDate, "MMM yyyy");
-  const end = endDate ? format(endDate, "MMM yyyy") : "Present";
-  return `${start} - ${end}`;
 };
 
 export const ExperienceInfo = ({

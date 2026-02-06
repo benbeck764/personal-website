@@ -11,18 +11,18 @@ export default function WorkPage() {
   return (
     <Container>
       <div className="py-16">
-        <h1 className="mb-4 font-bold font-heading text-4xl md:text-5xl">
+        {/* <h1 className="mb-4 font-bold font-heading text-4xl md:text-5xl">
           Work
-        </h1>
-        <p className="mb-12 text-foreground/70 text-xl">
+        </h1> */}
+        {/* <p className="mb-12 text-foreground/70 text-xl">
           Projects I've built and places I've worked
-        </p>
+        </p> */}
 
         {/* Projects Section */}
-        <section className="mb-16">
+        {/* <section className="mb-16">
           <h2 className="mb-8 font-bold font-heading text-3xl">Projects</h2>
           <p className="text-foreground/70">Project content coming soon...</p>
-        </section>
+        </section> */}
 
         {/* Experience Section */}
         <section>

@@ -2,35 +2,14 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import type { TimelineExperience } from "../types";
+import { formatDate } from "../utils";
 import { AnimatedPhoenix } from "./animated-phoenix";
 import { ExperienceInfo } from "./experience-info";
 import { TimelineMilestone } from "./timeline-milestone";
 
-// Format date as "Mon YYYY" (e.g., "Dec 2023")
-const formatDate = (date: Date): string => {
-  const month = date.toLocaleString("en-US", { month: "short" });
-  const year = date.getFullYear();
-  return `${month} ${year}`;
-};
-
-export type TimelineExperience = {
-  id: string;
-  companyName: string;
-  roles: Array<{
-    title: string;
-    accomplishments: string[];
-    startDate: Date;
-    endDate?: Date;
-  }>;
-  startYear: number;
-  endYear: number | null;
-  companyUrl: string;
-  contractCompany?: string;
-  contractCompanyUrl?: string;
-  technologies: string[];
-  contract?: boolean;
-  internship?: boolean;
-};
+// Re-export for convenience
+export type { TimelineExperience };
 
 type PhoenixTimelineProps = {
   experiences: TimelineExperience[];
