@@ -1,9 +1,9 @@
 "use client";
 
-import type { ReactNode } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { AnimatedPhoenix } from "./animated-phoenix";
+import { ExperienceInfo } from "./experience-info";
 import { TimelineMilestone } from "./timeline-milestone";
 
 // Format date as "Mon YYYY" (e.g., "Dec 2023")
@@ -24,7 +24,12 @@ export type TimelineExperience = {
   }>;
   startYear: number;
   endYear: number | null;
-  content: ReactNode;
+  companyUrl: string;
+  contractCompany?: string;
+  contractCompanyUrl?: string;
+  technologies: string[];
+  contract?: boolean;
+  internship?: boolean;
 };
 
 type PhoenixTimelineProps = {
@@ -273,7 +278,8 @@ export const PhoenixTimeline = ({
                           }}
                           isActive={
                             activeCompanyIndex === companyIndex &&
-                            (activeRoleIndex[companyIndex] ?? 0) === lastRoleIndex
+                            (activeRoleIndex[companyIndex] ?? 0) ===
+                              lastRoleIndex
                           }
                           onClick={() => {
                             setActiveCompanyIndex(companyIndex);
@@ -285,7 +291,7 @@ export const PhoenixTimeline = ({
                           label={`View ${experience.companyName} - ${experience.roles[lastRoleIndex]?.title || "First Role"}`}
                           variant="company"
                         />
-                        <span className="absolute top-1/2 right-[calc(100%+0.75rem)] -translate-y-1/2 whitespace-nowrap font-medium text-foreground/60 text-sm tabular-nums">
+                        <span className="-translate-y-1/2 absolute top-1/2 right-[calc(100%+0.75rem)] whitespace-nowrap font-medium text-foreground/60 text-sm tabular-nums">
                           {formatDate(
                             experience.roles[lastRoleIndex]?.startDate ||
                               new Date(),
@@ -364,7 +370,16 @@ export const PhoenixTimeline = ({
                     : "opacity-50 hover:opacity-75",
                 )}
               >
-                {experience.content}
+                <ExperienceInfo
+                  roles={experience.roles}
+                  companyName={experience.companyName}
+                  companyUrl={experience.companyUrl}
+                  contractCompany={experience.contractCompany}
+                  contractCompanyUrl={experience.contractCompanyUrl}
+                  technologies={experience.technologies}
+                  contract={experience.contract}
+                  internship={experience.internship}
+                />
               </div>
             </div>
           ))}
