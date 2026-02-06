@@ -202,6 +202,47 @@ code {
   }
 }
 
+.animate-milestone-pulse {
+  animation: milestone-pulse 1.5s ease-in-out infinite;
+}
+
+/* Ember Burst Animation for Click Effects */
+@keyframes ember-burst {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(1);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--ember-x), var(--ember-y)) scale(0.3);
+  }
+}
+
+/* Timeline Line Glow */
+@keyframes timeline-glow {
+  0%,
+  100% {
+    opacity: 0.8;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.timeline-line-active {
+  background: linear-gradient(
+    180deg,
+    var(--accent-ember) 0%,
+    var(--accent) 50%,
+    var(--accent-secondary) 100%
+  );
+  box-shadow: 0 0 20px rgba(234, 88, 12, 0.5);
+  animation: timeline-glow 2s ease-in-out infinite;
+}
+
 /* Custom easing for phoenix flight */
 .duration-800 {
   transition-duration: 800ms;

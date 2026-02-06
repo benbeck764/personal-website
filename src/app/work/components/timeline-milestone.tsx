@@ -22,7 +22,7 @@ export const TimelineMilestone = forwardRef<
         "relative z-10 cursor-pointer rounded-full border-2 transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",
         sizeClasses,
         isActive
-          ? "animate-pulse border-accent bg-accent shadow-lg"
+          ? "animate-milestone-pulse border-accent bg-accent shadow-lg"
           : "border-accent bg-background hover:scale-110 hover:shadow-md",
         className,
       )}

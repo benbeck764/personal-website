@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import type { TimelineExperience } from "../types";
 import { formatDate } from "../utils";
 import { AnimatedPhoenix } from "./animated-phoenix";
+import { EmberBurst } from "./ember-burst";
 import { ExperienceInfo } from "./experience-info";
 import { TimelineMilestone } from "./timeline-milestone";
 
@@ -35,6 +36,9 @@ export const PhoenixTimeline = ({
   const [milestonePositions, setMilestonePositions] = useState<
     Map<string, MilestonePosition>
   >(new Map());
+  const [emberBursts, setEmberBursts] = useState<
+    Array<{ id: string; x: number; y: number }>
+  >([]);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const timelineRef = useRef<HTMLDivElement>(null);
@@ -42,6 +46,7 @@ export const PhoenixTimeline = ({
   const milestoneRefs = useRef<Map<string, HTMLButtonElement | null>>(
     new Map(),
   );
+  const prevMilestoneRef = useRef({ companyIndex: 0, roleIndex: 0 });
 
   // Calculate milestone positions based on card positions
   const calculatePositions = useCallback(() => {
@@ -96,6 +101,27 @@ export const PhoenixTimeline = ({
 
     setMilestonePositions(newPositions);
   }, [experiences]);
+
+  // Spawn ember burst effect
+  const spawnEmberBurst = useCallback((milestoneKey: string) => {
+    const milestone = milestoneRefs.current.get(milestoneKey);
+    const container = containerRef.current;
+    if (!milestone || !container) return;
+
+    const milestoneRect = milestone.getBoundingClientRect();
+    const containerRect = container.getBoundingClientRect();
+
+    const x = milestoneRect.left - containerRect.left + milestoneRect.width / 2;
+    const y = milestoneRect.top - containerRect.top + milestoneRect.height / 2;
+
+    const burstId = `burst-${Date.now()}`;
+    setEmberBursts((prev) => [...prev, { id: burstId, x, y }]);
+  }, []);
+
+  // Remove ember burst after animation completes
+  const removeEmberBurst = useCallback((burstId: string) => {
+    setEmberBursts((prev) => prev.filter((burst) => burst.id !== burstId));
+  }, []);
 
   // Calculate phoenix position
   const updatePhoenixPosition = useCallback(() => {
@@ -227,14 +253,33 @@ export const PhoenixTimeline = ({
         }
       });
 
-      // Activate the closest milestone
+      // Activate the closest milestone and spawn ember burst if changed
       if (closestMilestone) {
         const { companyIndex, roleIndex } = closestMilestone;
-        setActiveCompanyIndex(companyIndex);
-        setActiveRoleIndex((prev) => ({
-          ...prev,
-          [companyIndex]: roleIndex,
-        }));
+
+        // Check if milestone changed
+        const hasChanged =
+          prevMilestoneRef.current.companyIndex !== companyIndex ||
+          prevMilestoneRef.current.roleIndex !== roleIndex;
+
+        if (hasChanged) {
+          setActiveCompanyIndex(companyIndex);
+          setActiveRoleIndex((prev) => ({
+            ...prev,
+            [companyIndex]: roleIndex,
+          }));
+
+          // Spawn ember burst on scroll activation
+          const lastRoleIndex = experiences[companyIndex].roles.length - 1;
+          const milestoneKey =
+            roleIndex === lastRoleIndex
+              ? `company-${companyIndex}`
+              : `role-${companyIndex}-${roleIndex}`;
+          spawnEmberBurst(milestoneKey);
+
+          // Update previous milestone
+          prevMilestoneRef.current = { companyIndex, roleIndex };
+        }
       }
     };
 
@@ -246,7 +291,7 @@ export const PhoenixTimeline = ({
     return () => {
       window.removeEventListener("scroll", handleScrollActivation);
     };
-  }, [milestonePositions, experiences]);
+  }, [milestonePositions, experiences, spawnEmberBurst]);
 
   return (
     <div ref={containerRef} className={cn("relative w-full", className)}>
@@ -306,6 +351,7 @@ export const PhoenixTimeline = ({
                               ...prev,
                               [companyIndex]: lastRoleIndex,
                             }));
+                            spawnEmberBurst(`company-${companyIndex}`);
                           }}
                           label={`View ${experience.companyName} - ${experience.roles[lastRoleIndex]?.title || "First Role"}`}
                           variant="company"
@@ -352,6 +398,7 @@ export const PhoenixTimeline = ({
                               ...prev,
                               [companyIndex]: roleIndex,
                             }));
+                            spawnEmberBurst(`role-${companyIndex}-${roleIndex}`);
                           }}
                           label={`View ${role.title} role at ${experience.companyName}`}
                           variant="role"
@@ -368,6 +415,16 @@ export const PhoenixTimeline = ({
 
           {/* Animated Phoenix */}
           <AnimatedPhoenix targetPosition={phoenixPosition} isActive={true} />
+
+          {/* Ember Bursts */}
+          {emberBursts.map((burst) => (
+            <EmberBurst
+              key={burst.id}
+              x={burst.x}
+              y={burst.y}
+              onComplete={() => removeEmberBurst(burst.id)}
+            />
+          ))}
         </div>
 
         {/* Content Column */}
