@@ -23,9 +23,9 @@ export function SubpostsSidebar({
           <Link
             href={`/blog/${parentPost.slug}`}
             className={cn(
-              "block rounded px-3 py-2 text-sm transition-colors",
+              "block rounded px-3 py-2 text-sm transition-all",
               currentId === parentPost.id
-                ? "bg-accent font-medium text-white"
+                ? "bg-accent font-medium text-white shadow-accent/30 shadow-lg"
                 : "text-foreground/70 hover:bg-muted hover:text-foreground",
             )}
           >
@@ -37,9 +37,9 @@ export function SubpostsSidebar({
             <Link
               href={`/blog/${subpost.slug}`}
               className={cn(
-                "block rounded px-3 py-2 text-sm transition-colors",
+                "block rounded px-3 py-2 text-sm transition-all",
                 currentId === subpost.id
-                  ? "bg-accent font-medium text-white"
+                  ? "bg-accent font-medium text-white shadow-accent/30 shadow-lg"
                   : "text-foreground/70 hover:bg-muted hover:text-foreground",
               )}
             >

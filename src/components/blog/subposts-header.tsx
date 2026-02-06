@@ -39,9 +39,9 @@ export function SubpostsHeader({
               href={`/blog/${parentPost.slug}`}
               onClick={() => setIsOpen(false)}
               className={cn(
-                "block rounded px-3 py-2 text-sm transition-colors",
+                "block rounded px-3 py-2 text-sm transition-all",
                 currentId === parentPost.id
-                  ? "bg-accent font-medium text-white"
+                  ? "bg-accent font-medium text-white shadow-accent/30 shadow-lg"
                   : "text-foreground/70 hover:bg-muted",
               )}
             >
@@ -54,9 +54,9 @@ export function SubpostsHeader({
                 href={`/blog/${subpost.slug}`}
                 onClick={() => setIsOpen(false)}
                 className={cn(
-                  "block rounded px-3 py-2 text-sm transition-colors",
+                  "block rounded px-3 py-2 text-sm transition-all",
                   currentId === subpost.id
-                    ? "bg-accent font-medium text-white"
+                    ? "bg-accent font-medium text-white shadow-accent/30 shadow-lg"
                     : "text-foreground/70 hover:bg-muted",
                 )}
               >

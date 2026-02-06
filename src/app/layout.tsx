@@ -6,10 +6,10 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Ben Beck",
+    default: "Ben Beck | Paradigm",
     template: "%s | Ben Beck",
   },
-  description: "Personal website and blog",
+  description: "Rising through continuous transformation. Exploring technology, fitness, psychology, personality typology, and literature.",
 };
 
 export default function RootLayout({

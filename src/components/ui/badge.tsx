@@ -10,6 +10,8 @@ const badgeVariants = cva(
         default: "bg-accent text-white",
         secondary: "bg-muted text-foreground",
         outline: "border border-border text-foreground",
+        phoenix:
+          "bg-gradient-to-r from-accent-ember via-accent to-accent-secondary text-white shadow-accent/40 shadow-lg",
       },
     },
     defaultVariants: {

@@ -42,8 +42,10 @@ export function TOCSidebar({ headings }: TOCSidebarProps) {
             <a
               href={`#${id}`}
               className={cn(
-                "block py-1 text-foreground/60 transition-colors hover:text-foreground",
-                activeId === id && "font-medium text-accent",
+                "block rounded px-3 py-1.5 text-sm transition-all",
+                activeId === id
+                  ? "font-medium text-accent shadow-accent/20 shadow-sm"
+                  : "text-foreground/60 hover:text-foreground",
               )}
             >
               {text}

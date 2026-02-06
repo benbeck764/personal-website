@@ -15,7 +15,7 @@ export function PostCard({ post, combinedReadingTime }: PostCardProps) {
   const displayReadingTime = combinedReadingTime || readingTime;
 
   return (
-    <Card className="transition-colors hover:border-accent">
+    <Card className="transition-all hover:border-accent hover:shadow-accent/20 hover:shadow-lg">
       <Link href={`/blog/${slug}`} className="block">
         <h3 className="mb-2 font-bold font-heading text-2xl hover:text-accent">
           {frontmatter.title}

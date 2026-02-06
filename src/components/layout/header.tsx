@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PhoenixIcon } from "@/components/icons/phoenix-icon";
 import { Container } from "./container";
 
 export function Header() {
@@ -11,8 +12,16 @@ export function Header() {
     <header className="sticky top-0 z-50 border-border border-b bg-background/80 backdrop-blur-sm">
       <Container>
         <div className="flex h-16 items-center justify-between">
-          <Link href="/" className="font-bold font-heading text-xl">
-            Ben Beck
+          <Link href="/" className="flex items-center gap-3">
+            <PhoenixIcon className="h-8 w-8 text-accent" />
+            <div className="flex flex-col">
+              <span className="font-bold font-heading text-xl leading-none">
+                Ben Beck
+              </span>
+              <span className="font-heading font-medium text-accent text-xs tracking-wider">
+                PARADIGM
+              </span>
+            </div>
           </Link>
 
           <nav className="flex items-center gap-6">
