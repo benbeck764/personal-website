@@ -173,3 +173,40 @@ code {
     transform: translate(-50%, -50%) scale(1.25);
   }
 }
+
+/* Phoenix Timeline Animations */
+@keyframes phoenix-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 20px rgba(234, 88, 12, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 35px rgba(234, 88, 12, 0.7));
+  }
+}
+
+.animate-phoenix-glow {
+  animation: phoenix-glow 2s ease-in-out infinite;
+}
+
+/* Milestone Pulse Animation */
+@keyframes milestone-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(234, 88, 12, 0.7);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(234, 88, 12, 0);
+  }
+}
+
+/* Custom easing for phoenix flight */
+.duration-800 {
+  transition-duration: 800ms;
+}
+
+.ease-in-out {
+  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+}

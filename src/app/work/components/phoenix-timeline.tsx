@@ -1,7 +1,9 @@
 "use client";
 
-import * as React from "react";
+import type { ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { AnimatedPhoenix } from "./animated-phoenix";
 import { TimelineMilestone } from "./timeline-milestone";
 import { TimelineYearMarker } from "./timeline-year-marker";
 
@@ -16,7 +18,7 @@ export type TimelineExperience = {
   }>;
   startYear: number;
   endYear: number | null;
-  content: React.ReactNode;
+  content: ReactNode;
 };
 
 type PhoenixTimelineProps = {
@@ -28,8 +30,28 @@ export const PhoenixTimeline = ({
   experiences,
   className,
 }: PhoenixTimelineProps) => {
-  const [activeCompanyIndex, setActiveCompanyIndex] = React.useState(0);
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  const [activeCompanyIndex, setActiveCompanyIndex] = useState(0);
+  const [phoenixPosition, setPhoenixPosition] = useState({ x: 0, y: 0 });
+  const containerRef = useRef<HTMLDivElement>(null);
+  const milestoneRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  // Calculate phoenix position when active milestone changes
+  useEffect(() => {
+    const activeMilestone = milestoneRefs.current[activeCompanyIndex];
+    const container = containerRef.current;
+
+    if (activeMilestone && container) {
+      const milestoneRect = activeMilestone.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
+
+      // Calculate position relative to container
+      // Center the phoenix on the milestone
+      const x = milestoneRect.left - containerRect.left - 32; // -32 to center (24px phoenix / 2 = 12, but accounting for offset)
+      const y = milestoneRect.top - containerRect.top - 32;
+
+      setPhoenixPosition({ x, y });
+    }
+  }, [activeCompanyIndex]);
 
   return (
     <div ref={containerRef} className={cn("relative w-full", className)}>
@@ -57,6 +79,9 @@ export const PhoenixTimeline = ({
             {experiences.map((experience, companyIndex) => (
               <div key={experience.id} className="relative">
                 <TimelineMilestone
+                  ref={(el) => {
+                    milestoneRefs.current[companyIndex] = el;
+                  }}
                   isActive={activeCompanyIndex === companyIndex}
                   onClick={() => setActiveCompanyIndex(companyIndex)}
                   label={`View ${experience.companyName} experience`}
@@ -65,6 +90,9 @@ export const PhoenixTimeline = ({
               </div>
             ))}
           </div>
+
+          {/* Animated Phoenix */}
+          <AnimatedPhoenix targetPosition={phoenixPosition} isActive={true} />
         </div>
 
         {/* Content Column */}

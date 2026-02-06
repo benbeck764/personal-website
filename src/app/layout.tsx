@@ -1,34 +1,40 @@
 import type { Metadata } from "next";
-import { Footer } from "@/components/layout/footer";
-import { Header } from "@/components/layout/header";
-import { geistMono, geistSans, oxanium } from "@/lib/fonts";
+import type { ReactNode } from "react";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
-  title: {
-    default: "Ben Beck | Paradigm",
-    template: "%s | Ben Beck",
-  },
-  description:
-    "Rising through continuous transformation. Exploring technology, fitness, psychology, personality typology, and literature.",
-  icons: {
-    icon: { url: "/favicon.svg", type: "image/svg+xml" },
-  },
+  title: "Ben Beck - Software Engineer",
+  description: "Personal website and blog",
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="scroll-smooth">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${oxanium.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-background text-foreground`}
       >
-        <Header />
-        <main className="min-h-screen">{children}</main>
-        <Footer />
+        <div className="flex min-h-screen flex-col">
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </div>
       </body>
     </html>
   );

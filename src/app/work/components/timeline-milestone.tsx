@@ -1,4 +1,4 @@
-import * as React from "react";
+import { forwardRef } from "react";
 import { cn } from "@/lib/utils";
 
 type TimelineMilestoneProps = {
@@ -9,7 +9,7 @@ type TimelineMilestoneProps = {
   className?: string;
 };
 
-export const TimelineMilestone = React.forwardRef<
+export const TimelineMilestone = forwardRef<
   HTMLButtonElement,
   TimelineMilestoneProps
 >(({ isActive, onClick, label, variant = "company", className }, ref) => {

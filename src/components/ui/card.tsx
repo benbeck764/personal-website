@@ -1,9 +1,10 @@
-import * as React from "react";
+import type { HTMLAttributes } from "react";
+import { forwardRef } from "react";
 import { cn } from "@/lib/utils";
 
-export type CardProps = React.HTMLAttributes<HTMLDivElement>;
+export type CardProps = HTMLAttributes<HTMLDivElement>;
 
-export const Card = React.forwardRef<HTMLDivElement, CardProps>(
+export const Card = forwardRef<HTMLDivElement, CardProps>(
   ({ className, ...props }, ref) => {
     return (
       <div

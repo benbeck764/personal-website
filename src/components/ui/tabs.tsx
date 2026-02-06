@@ -1,11 +1,12 @@
 "use client";
 
-import * as React from "react";
+import type { ReactNode } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 
 export type TabItem = {
   label: string;
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 type TabsProps = {
@@ -15,7 +16,7 @@ type TabsProps = {
 };
 
 export const Tabs = ({ tabs, defaultTab = 0, className }: TabsProps) => {
-  const [activeTab, setActiveTab] = React.useState(defaultTab);
+  const [activeTab, setActiveTab] = useState(defaultTab);
 
   return (
     <div className={cn("w-full", className)}>
