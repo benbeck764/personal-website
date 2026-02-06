@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import type { ReactNode } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { Header } from "@/components/layout/header";
+import type { ReactNode } from "react";
 import { Footer } from "@/components/layout/footer";
+import { Header } from "@/components/layout/header";
+import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen bg-background text-foreground`}
+        className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-background text-foreground antialiased`}
       >
         <div className="flex min-h-screen flex-col">
           <Header />

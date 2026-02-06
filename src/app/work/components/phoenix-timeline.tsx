@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { AnimatedPhoenix } from "./animated-phoenix";
 import { TimelineMilestone } from "./timeline-milestone";
@@ -26,70 +26,321 @@ type PhoenixTimelineProps = {
   className?: string;
 };
 
+type MilestonePosition = {
+  top: number;
+  year: number;
+};
+
 export const PhoenixTimeline = ({
   experiences,
   className,
 }: PhoenixTimelineProps) => {
   const [activeCompanyIndex, setActiveCompanyIndex] = useState(0);
+  const [activeRoleIndex, setActiveRoleIndex] = useState<
+    Record<number, number>
+  >(
+    { 0: 0 }, // Start with True Anomaly's first role (Principal)
+  );
   const [phoenixPosition, setPhoenixPosition] = useState({ x: 0, y: 0 });
+  const [milestonePositions, setMilestonePositions] = useState<
+    Map<string, MilestonePosition>
+  >(new Map());
+
   const containerRef = useRef<HTMLDivElement>(null);
-  const milestoneRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const timelineRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<Map<string, HTMLDivElement | null>>(new Map());
+  const milestoneRefs = useRef<Map<string, HTMLButtonElement | null>>(
+    new Map(),
+  );
 
-  // Calculate phoenix position when active milestone changes
-  useEffect(() => {
-    const activeMilestone = milestoneRefs.current[activeCompanyIndex];
+  // Calculate milestone positions based on card positions
+  const calculatePositions = useCallback(() => {
+    if (!containerRef.current || !timelineRef.current) return;
+
+    const newPositions = new Map<string, MilestonePosition>();
+    const containerRect = containerRef.current.getBoundingClientRect();
+
+    experiences.forEach((experience, companyIndex) => {
+      const cardKey = `card-${companyIndex}`;
+      const card = cardRefs.current.get(cardKey);
+
+      if (card) {
+        const cardRect = card.getBoundingClientRect();
+        const topPosition = cardRect.top - containerRect.top;
+
+        // Company milestone position
+        newPositions.set(`company-${companyIndex}`, {
+          top: topPosition,
+          year: experience.startYear,
+        });
+
+        // Role sub-milestone positions (temporal)
+        if (experience.roles.length > 1) {
+          const cardHeight = cardRect.height;
+
+          // Company start = earliest role start date
+          const companyStartTime = Math.min(
+            ...experience.roles.map((r) => r.startDate.getTime()),
+          );
+          // Company end = latest role end date (or now for current roles)
+          const companyEndTime = Math.max(
+            ...experience.roles.map((r) => r.endDate?.getTime() || Date.now()),
+          );
+          const timeSpan = companyEndTime - companyStartTime;
+
+          experience.roles.forEach((role, roleIndex) => {
+            const roleStartTime = role.startDate.getTime();
+            // Reverse chronological: newest roles at top, oldest at bottom
+            const timeOffset = companyEndTime - roleStartTime;
+            const positionRatio = timeSpan > 0 ? timeOffset / timeSpan : 0;
+            const roleTopOffset = positionRatio * cardHeight;
+
+            newPositions.set(`role-${companyIndex}-${roleIndex}`, {
+              top: topPosition + roleTopOffset,
+              year: role.startDate.getFullYear(),
+            });
+          });
+        }
+      }
+    });
+
+    setMilestonePositions(newPositions);
+  }, [experiences]);
+
+  // Calculate phoenix position
+  const updatePhoenixPosition = useCallback(() => {
     const container = containerRef.current;
+    if (!container) return;
 
-    if (activeMilestone && container) {
+    const activeExperience = experiences[activeCompanyIndex];
+    if (!activeExperience) return;
+
+    let activeMilestone: HTMLButtonElement | null = null;
+    const activeRoleIdx = activeRoleIndex[activeCompanyIndex] ?? 0;
+    const lastRoleIndex = activeExperience.roles.length - 1;
+
+    // Last role (first chronologically) uses company milestone, others use role milestones
+    if (activeRoleIdx === lastRoleIndex) {
+      const companyMilestoneKey = `company-${activeCompanyIndex}`;
+      activeMilestone = milestoneRefs.current.get(companyMilestoneKey) ?? null;
+    } else {
+      const roleMilestoneKey = `role-${activeCompanyIndex}-${activeRoleIdx}`;
+      activeMilestone = milestoneRefs.current.get(roleMilestoneKey) ?? null;
+    }
+
+    if (activeMilestone) {
       const milestoneRect = activeMilestone.getBoundingClientRect();
       const containerRect = container.getBoundingClientRect();
 
-      // Calculate position relative to container
-      // Center the phoenix on the milestone
-      const x = milestoneRect.left - containerRect.left - 32; // -32 to center (24px phoenix / 2 = 12, but accounting for offset)
+      const x = milestoneRect.left - containerRect.left - 32;
       const y = milestoneRect.top - containerRect.top - 32;
 
       setPhoenixPosition({ x, y });
     }
-  }, [activeCompanyIndex]);
+  }, [activeCompanyIndex, activeRoleIndex, experiences]);
+
+  // Initial position calculation and recalculation on resize
+  useEffect(() => {
+    calculatePositions();
+
+    const handleResize = () => {
+      calculatePositions();
+    };
+
+    window.addEventListener("resize", handleResize);
+    // Small delay to ensure cards are rendered
+    const timeout = setTimeout(calculatePositions, 100);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      clearTimeout(timeout);
+    };
+  }, [calculatePositions]);
+
+  // Update phoenix position when active milestone or scroll changes
+  useEffect(() => {
+    updatePhoenixPosition();
+
+    const handleScroll = () => {
+      updatePhoenixPosition();
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    document.addEventListener("scroll", handleScroll, true);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("scroll", handleScroll, true);
+    };
+  }, [updatePhoenixPosition]);
+
+  // Scroll-based activation: Activate cards as they come into view
+  useEffect(() => {
+    // Wait for cards to be positioned before observing
+    if (milestonePositions.size === 0) return;
+
+    const cards = Array.from(cardRefs.current.entries());
+    if (cards.length === 0) return;
+
+    const observerOptions = {
+      root: null,
+      rootMargin: "-40% 0px -40% 0px", // Trigger when card is in middle 20% of viewport
+      threshold: 0,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // Find which card index this is
+          const cardElement = entry.target;
+          const cardEntry = cards.find(([, el]) => el === cardElement);
+          if (cardEntry) {
+            const [key] = cardEntry;
+            const companyIndex = Number.parseInt(key.split("-")[1] ?? "0", 10);
+            setActiveCompanyIndex(companyIndex);
+            // Reset to first role when auto-activating via scroll
+            setActiveRoleIndex((prev) => ({
+              ...prev,
+              [companyIndex]: 0,
+            }));
+          }
+        }
+      });
+    }, observerOptions);
+
+    // Observe all cards
+    cards.forEach(([, card]) => {
+      if (card) observer.observe(card);
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [milestonePositions]);
 
   return (
     <div ref={containerRef} className={cn("relative w-full", className)}>
       {/* Timeline Layout */}
       <div className="grid grid-cols-[auto_1fr] gap-8 md:grid-cols-[10%_20%_70%] md:gap-4">
         {/* Year Column */}
-        <div className="space-y-12">
-          {experiences.map((experience) => (
-            <div
-              key={`year-${experience.id}`}
-              className="flex items-start pt-2"
-            >
-              <TimelineYearMarker year={experience.startYear} />
-            </div>
-          ))}
+        <div className="relative" style={{ minHeight: "100vh" }}>
+          {Array.from(milestonePositions.entries())
+            .filter(([key]) => key.startsWith("company-"))
+            .map(([key, position]) => {
+              const companyIndex = Number.parseInt(
+                key.split("-")[1] ?? "0",
+                10,
+              );
+              const experience = experiences[companyIndex];
+              if (!experience) return null;
+
+              return (
+                <div
+                  key={`year-${key}`}
+                  className="absolute flex items-start pt-2"
+                  style={{ top: `${position.top}px` }}
+                >
+                  <TimelineYearMarker year={position.year} />
+                </div>
+              );
+            })}
         </div>
 
         {/* Timeline Column */}
-        <div className="relative">
+        <div ref={timelineRef} className="relative">
           {/* Timeline Line */}
           <div className="absolute top-0 bottom-0 left-5 w-0.5 bg-border" />
 
-          {/* Milestones */}
-          <div className="relative space-y-12">
-            {experiences.map((experience, companyIndex) => (
-              <div key={experience.id} className="relative">
-                <TimelineMilestone
-                  ref={(el) => {
-                    milestoneRefs.current[companyIndex] = el;
-                  }}
-                  isActive={activeCompanyIndex === companyIndex}
-                  onClick={() => setActiveCompanyIndex(companyIndex)}
-                  label={`View ${experience.companyName} experience`}
-                  variant="company"
-                />
+          {/* Company Milestones */}
+          {experiences.map((experience, companyIndex) => {
+            const companyPosition = milestonePositions.get(
+              `company-${companyIndex}`,
+            );
+
+            return (
+              <div key={`company-milestone-${experience.id}`}>
+                {/* Company Milestone - Show at LAST role (first chronologically) */}
+                {(() => {
+                  const lastRoleIndex = experience.roles.length - 1;
+                  // For multiple roles, use last role's position; for single role, use company position
+                  const position =
+                    experience.roles.length > 1
+                      ? milestonePositions.get(
+                          `role-${companyIndex}-${lastRoleIndex}`,
+                        )
+                      : companyPosition;
+
+                  return position ? (
+                    <div
+                      className="absolute"
+                      style={{ top: `${position.top}px` }}
+                    >
+                      <TimelineMilestone
+                        ref={(el) => {
+                          milestoneRefs.current.set(
+                            `company-${companyIndex}`,
+                            el,
+                          );
+                        }}
+                        isActive={
+                          activeCompanyIndex === companyIndex &&
+                          (activeRoleIndex[companyIndex] ?? 0) === lastRoleIndex
+                        }
+                        onClick={() => {
+                          setActiveCompanyIndex(companyIndex);
+                          setActiveRoleIndex((prev) => ({
+                            ...prev,
+                            [companyIndex]: lastRoleIndex,
+                          }));
+                        }}
+                        label={`View ${experience.companyName} - ${experience.roles[lastRoleIndex]?.title || "First Role"}`}
+                        variant="company"
+                      />
+                    </div>
+                  ) : null;
+                })()}
+
+                {/* Role Sub-Milestones (for all roles except the last) */}
+                {experience.roles.length > 1 &&
+                  experience.roles.slice(0, -1).map((role, roleIndex) => {
+                    // roleIndex is 0 to length-2
+                    const rolePosition = milestonePositions.get(
+                      `role-${companyIndex}-${roleIndex}`,
+                    );
+
+                    return rolePosition ? (
+                      <div
+                        key={`role-milestone-${experience.id}-${role.title}`}
+                        className="absolute"
+                        style={{ top: `${rolePosition.top}px` }}
+                      >
+                        <TimelineMilestone
+                          ref={(el) => {
+                            milestoneRefs.current.set(
+                              `role-${companyIndex}-${roleIndex}`,
+                              el,
+                            );
+                          }}
+                          isActive={
+                            activeCompanyIndex === companyIndex &&
+                            (activeRoleIndex[companyIndex] ?? 0) === roleIndex
+                          }
+                          onClick={() => {
+                            setActiveCompanyIndex(companyIndex);
+                            setActiveRoleIndex((prev) => ({
+                              ...prev,
+                              [companyIndex]: roleIndex,
+                            }));
+                          }}
+                          label={`View ${role.title} role at ${experience.companyName}`}
+                          variant="role"
+                        />
+                      </div>
+                    ) : null;
+                  })}
               </div>
-            ))}
-          </div>
+            );
+          })}
 
           {/* Animated Phoenix */}
           <AnimatedPhoenix targetPosition={phoenixPosition} isActive={true} />
@@ -98,7 +349,13 @@ export const PhoenixTimeline = ({
         {/* Content Column */}
         <div className="space-y-12">
           {experiences.map((experience, companyIndex) => (
-            <div key={experience.id} className="relative">
+            <div
+              key={experience.id}
+              ref={(el) => {
+                cardRefs.current.set(`card-${companyIndex}`, el);
+              }}
+              className="relative"
+            >
               {/* Experience Content */}
               <div
                 className={cn(

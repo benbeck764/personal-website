@@ -1,6 +1,6 @@
-import type { ComponentProps } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import type { ComponentProps } from "react";
 
 export const mdxComponents = {
   // Custom link component
