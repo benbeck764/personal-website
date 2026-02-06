@@ -251,3 +251,63 @@ code {
 .ease-in-out {
   transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Disable phoenix flight animation */
+  .animated-phoenix {
+    transition: none !important;
+  }
+
+  /* Disable milestone pulse */
+  .animate-milestone-pulse {
+    animation: none !important;
+  }
+
+  /* Disable phoenix glow */
+  .animate-phoenix-glow {
+    animation: none !important;
+    filter: drop-shadow(0 0 20px rgba(234, 88, 12, 0.4));
+  }
+
+  /* Disable timeline glow */
+  .timeline-line-active {
+    animation: none !important;
+  }
+
+  /* Disable ember burst animations */
+  @keyframes ember-burst {
+    0%, 100% {
+      opacity: 0;
+      transform: translate(0, 0) scale(1);
+    }
+  }
+
+  /* Disable hero phoenix animations */
+  .phoenix-glow-container {
+    animation: none !important;
+  }
+
+  .phoenix-container {
+    transition: none !important;
+  }
+
+  .phoenix-container:hover {
+    transform: none !important;
+  }
+
+  /* Disable floating embers */
+  .ember {
+    animation: none !important;
+    opacity: 0 !important;
+  }
+}

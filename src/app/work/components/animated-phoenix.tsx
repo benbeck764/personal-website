@@ -36,7 +36,7 @@ export const AnimatedPhoenix = ({
   return (
     <div
       className={cn(
-        "pointer-events-none absolute z-20 transition-transform duration-800 ease-in-out",
+        "animated-phoenix pointer-events-none absolute z-20 transition-transform duration-800 ease-in-out",
         isActive && "animate-phoenix-glow",
         className,
       )}
@@ -45,7 +45,7 @@ export const AnimatedPhoenix = ({
         transformOrigin: "center center",
       }}
     >
-      <PhoenixIconSmall className="h-24 w-24 drop-shadow-[0_0_20px_rgba(234,88,12,0.6)]" />
+      <PhoenixIconSmall className="h-16 w-16 drop-shadow-[0_0_20px_rgba(234,88,12,0.6)] md:h-24 md:w-24" />
     </div>
   );
 };

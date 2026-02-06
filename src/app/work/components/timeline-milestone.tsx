@@ -13,7 +13,10 @@ export const TimelineMilestone = forwardRef<
   HTMLButtonElement,
   TimelineMilestoneProps
 >(({ isActive, onClick, label, variant = "company", className }, ref) => {
-  const sizeClasses = variant === "company" ? "h-10 w-10" : "h-6 w-6";
+  const sizeClasses =
+    variant === "company"
+      ? "h-11 w-11 md:h-10 md:w-10"
+      : "h-8 w-8 md:h-6 md:w-6";
 
   return (
     <button
@@ -33,5 +36,3 @@ export const TimelineMilestone = forwardRef<
     />
   );
 });
-
-TimelineMilestone.displayName = "TimelineMilestone";

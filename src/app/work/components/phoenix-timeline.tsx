@@ -148,8 +148,13 @@ export const PhoenixTimeline = ({
       const milestoneRect = activeMilestone.getBoundingClientRect();
       const containerRect = container.getBoundingClientRect();
 
-      const x = milestoneRect.left - containerRect.left - 32;
-      const y = milestoneRect.top - containerRect.top - 32;
+      // Center phoenix on milestone
+      // Note: transform origin is "center center", so x/y position the phoenix's center
+      const milestoneCenterX = milestoneRect.left + milestoneRect.width / 2;
+      const milestoneCenterY = milestoneRect.top + milestoneRect.height / 2;
+
+      const x = milestoneCenterX - containerRect.left;
+      const y = milestoneCenterY - containerRect.top;
 
       setPhoenixPosition({ x, y });
     }
@@ -296,7 +301,7 @@ export const PhoenixTimeline = ({
   return (
     <div ref={containerRef} className={cn("relative w-full", className)}>
       {/* Timeline Layout */}
-      <div className="grid grid-cols-[auto_1fr] gap-8 md:grid-cols-[10%_20%_70%] md:gap-4">
+      <div className="grid grid-cols-[60px_1fr] gap-4 md:grid-cols-[10%_20%_70%] md:gap-4">
         {/* Spacer Column (optional) */}
         <div
           className="relative hidden md:block"
@@ -306,7 +311,7 @@ export const PhoenixTimeline = ({
         {/* Timeline Column */}
         <div ref={timelineRef} className="relative">
           {/* Timeline Line */}
-          <div className="absolute top-0 bottom-0 left-5 w-0.5 bg-border" />
+          <div className="absolute top-0 bottom-0 left-5.5 w-0.5 bg-border md:left-5" />
 
           {/* Company Milestones */}
           {experiences.map((experience, companyIndex) => {
@@ -356,7 +361,7 @@ export const PhoenixTimeline = ({
                           label={`View ${experience.companyName} - ${experience.roles[lastRoleIndex]?.title || "First Role"}`}
                           variant="company"
                         />
-                        <span className="-translate-y-1/2 absolute top-1/2 right-[calc(100%+0.75rem)] whitespace-nowrap font-semibold text-foreground/70 text-lg tabular-nums">
+                        <span className="-translate-y-1/2 absolute top-1/2 right-[calc(100%+0.75rem)] hidden whitespace-nowrap font-heading text-foreground/70 text-lg tabular-nums md:inline">
                           {formatDate(
                             experience.roles[lastRoleIndex]?.startDate ||
                               new Date(),
@@ -378,8 +383,11 @@ export const PhoenixTimeline = ({
                     return rolePosition ? (
                       <div
                         key={`role-milestone-${experience.id}-${role.title}`}
-                        className="absolute flex items-center gap-3"
-                        style={{ top: `${rolePosition.top}px`, left: "8px" }}
+                        className="absolute flex items-center gap-2 md:gap-3"
+                        style={{
+                          top: `${rolePosition.top}px`,
+                          left: "6px",
+                        }}
                       >
                         <TimelineMilestone
                           ref={(el) => {
@@ -398,12 +406,14 @@ export const PhoenixTimeline = ({
                               ...prev,
                               [companyIndex]: roleIndex,
                             }));
-                            spawnEmberBurst(`role-${companyIndex}-${roleIndex}`);
+                            spawnEmberBurst(
+                              `role-${companyIndex}-${roleIndex}`,
+                            );
                           }}
                           label={`View ${role.title} role at ${experience.companyName}`}
                           variant="role"
                         />
-                        <span className="font-medium text-foreground/60 text-sm tabular-nums">
+                        <span className="hidden font-heading font-medium text-foreground/60 text-sm tabular-nums md:inline">
                           {formatDate(role.startDate)}
                         </span>
                       </div>
