@@ -9,7 +9,11 @@ export const metadata: Metadata = {
     default: "Ben Beck | Paradigm",
     template: "%s | Ben Beck",
   },
-  description: "Rising through continuous transformation. Exploring technology, fitness, psychology, personality typology, and literature.",
+  description:
+    "Rising through continuous transformation. Exploring technology, fitness, psychology, personality typology, and literature.",
+  icons: {
+    icon: { url: "/favicon.svg", type: "image/svg+xml" },
+  },
 };
 
 export default function RootLayout({

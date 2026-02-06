@@ -6,6 +6,7 @@ export function PhoenixIcon({ className }: { className?: string }) {
       className={className}
       role="img"
       aria-label="Phoenix rising from flames"
+      shapeRendering="geometricPrecision"
     >
       <title>Phoenix rising from flames</title>
       <defs>

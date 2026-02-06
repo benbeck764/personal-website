@@ -59,7 +59,7 @@ export default function HomePage() {
         </div>
 
         {/* Phoenix Icon with Glow */}
-        <div className="relative mb-8 h-48 w-48 md:h-56 md:w-56">
+        <div className="phoenix-container relative mb-8 h-48 w-48 md:h-56 md:w-56">
           <div className="phoenix-glow-container absolute top-1/2 left-1/2 h-72 w-72 md:h-80 md:w-80" />
           <PhoenixIcon className="relative z-10 h-full w-full drop-shadow-[0_0_30px_rgba(255,120,0,0.4)]" />
         </div>

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PhoenixIcon } from "@/components/icons/phoenix-icon";
+import { PhoenixIconSmall } from "@/components/icons/phoenix-icon-small";
 import { Container } from "./container";
 
 export function Header() {
@@ -13,7 +13,7 @@ export function Header() {
       <Container>
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-3">
-            <PhoenixIcon className="h-8 w-8 text-accent" />
+            <PhoenixIconSmall className="h-8 w-8 text-accent" />
             <div className="flex flex-col">
               <span className="font-bold font-heading text-xl leading-none">
                 Ben Beck
