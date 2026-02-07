@@ -6,7 +6,7 @@ type PhoenixAnimationRefs = {
   milestoneRefs: RefObject<Map<MilestoneKey, HTMLButtonElement | null>>;
 };
 
-type UsePhoenixAnimationReturn = {
+type UsePhoenixAnimationResult = {
   phoenixPosition: { x: number; y: number };
   emberBursts: Array<{ id: string; x: number; y: number }>;
   spawnEmberBurst: (
@@ -60,7 +60,7 @@ export const usePhoenixAnimation = (
   activeRoleIndex: Record<number, number>,
   experiences: TimelineExperience[],
   refs: PhoenixAnimationRefs,
-): UsePhoenixAnimationReturn => {
+): UsePhoenixAnimationResult => {
   const [phoenixPosition, setPhoenixPosition] = useState({ x: 0, y: 0 });
   const [emberBursts, setEmberBursts] = useState<
     Array<{ id: string; x: number; y: number }>
@@ -172,9 +172,7 @@ export const usePhoenixAnimation = (
   useEffect(() => {
     updatePhoenixPosition();
 
-    const handleScroll = () => {
-      updatePhoenixPosition();
-    };
+    const handleScroll = () => updatePhoenixPosition();
 
     window.addEventListener("scroll", handleScroll);
     document.addEventListener("scroll", handleScroll, true);

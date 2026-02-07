@@ -10,7 +10,7 @@ import type { MilestoneKey, TimelineExperience } from "../types";
 import { milestoneKey } from "../types";
 import type { MilestonePosition } from "./useMilestonePositions";
 
-type UseScrollActivationReturn = {
+type UseScrollActivationResult = {
   activeCompanyIndex: number;
   activeRoleIndex: Record<number, number>;
   setActiveCompanyIndex: Dispatch<SetStateAction<number>>;
@@ -26,7 +26,7 @@ export const useScrollActivation = (
   experiences: TimelineExperience[],
   milestonePositions: Map<MilestoneKey, MilestonePosition>,
   milestoneRefs: RefObject<Map<MilestoneKey, HTMLButtonElement | null>>,
-): UseScrollActivationReturn => {
+): UseScrollActivationResult => {
   const [activeCompanyIndex, setActiveCompanyIndex] = useState(0);
   const [activeRoleIndex, setActiveRoleIndex] = useState<
     Record<number, number>

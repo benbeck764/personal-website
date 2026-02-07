@@ -7,7 +7,7 @@ export type MilestonePosition = {
   year: number;
 };
 
-type UseMilestonePositionsReturn = {
+type UseMilestonePositionsResult = {
   milestonePositions: Map<MilestoneKey, MilestonePosition>;
   containerRef: RefObject<HTMLDivElement | null>;
   timelineRef: RefObject<HTMLDivElement | null>;
@@ -18,7 +18,7 @@ type UseMilestonePositionsReturn = {
 
 export const useMilestonePositions = (
   experiences: TimelineExperience[],
-): UseMilestonePositionsReturn => {
+): UseMilestonePositionsResult => {
   const [milestonePositions, setMilestonePositions] = useState<
     Map<MilestoneKey, MilestonePosition>
   >(new Map());
