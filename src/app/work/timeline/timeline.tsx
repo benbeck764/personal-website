@@ -161,20 +161,27 @@ export const Timeline = () => {
   // Initial position calculation and recalculation on resize
   useEffect(() => {
     calculatePositions();
+    updatePhoenixPosition();
 
     const handleResize = () => {
       calculatePositions();
+      updatePhoenixPosition();
     };
 
     window.addEventListener("resize", handleResize);
-    // Small delay to ensure cards are rendered
-    const timeout = setTimeout(calculatePositions, 100);
+    // Small delay to ensure cards are rendered, then spawn initial ember burst
+    const timeout = setTimeout(() => {
+      calculatePositions();
+      updatePhoenixPosition();
+      // Spawn ember burst at initial position (latest role of first company)
+      spawnEmberBurst(milestoneKey.role(0, 0));
+    }, 150);
 
     return () => {
       window.removeEventListener("resize", handleResize);
       clearTimeout(timeout);
     };
-  }, [calculatePositions]);
+  }, [calculatePositions, updatePhoenixPosition, spawnEmberBurst]);
 
   // Update phoenix position when active milestone or scroll changes
   useEffect(() => {
@@ -474,6 +481,11 @@ export const Timeline = () => {
                   technologies={experience.technologies}
                   contract={experience.contract}
                   internship={experience.internship}
+                  activeRoleIndex={
+                    activeCompanyIndex === companyIndex
+                      ? (activeRoleIndex[companyIndex] ?? 0)
+                      : undefined
+                  }
                 />
               </div>
             </div>

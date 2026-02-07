@@ -45,7 +45,7 @@ export const AnimatedPhoenix = ({
         transformOrigin: "center center",
       }}
     >
-      <PhoenixIconSmall className="h-16 w-16 drop-shadow-[0_0_20px_rgba(234,88,12,0.6)] md:h-24 md:w-24" />
+      <PhoenixIconSmall className="h-16 w-16 drop-shadow-[0_0_20px_rgba(var(--accent-rgb),0.6)] md:h-24 md:w-24" />
     </div>
   );
 };

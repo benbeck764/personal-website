@@ -15,6 +15,11 @@
   --accent-secondary: #f59e0b;
   --accent-ember: #dc2626;
 
+  /* RGB values for rgba() usage */
+  --accent-rgb: 234, 88, 12;
+  --accent-secondary-rgb: 245, 158, 11;
+  --accent-ember-rgb: 220, 38, 38;
+
   /* Phoenix Gradient */
   --phoenix-gradient: linear-gradient(
     135deg,
@@ -74,12 +79,12 @@ code {
 }
 
 .phoenix-glow {
-  box-shadow: 0 0 20px rgba(234, 88, 12, 0.3);
+  box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.3);
   transition: box-shadow 0.3s ease;
 }
 
 .phoenix-glow:hover {
-  box-shadow: 0 0 30px rgba(234, 88, 12, 0.5);
+  box-shadow: 0 0 30px rgba(var(--accent-rgb), 0.5);
 }
 
 .phoenix-border {

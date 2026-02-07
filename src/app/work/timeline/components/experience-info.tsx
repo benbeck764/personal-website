@@ -2,6 +2,7 @@ import { ExternalLink } from "lucide-react";
 import { memo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import type { Role } from "../types";
 import { formatDateRange } from "../utils";
 
@@ -14,6 +15,7 @@ type ExperienceInfoProps = {
   technologies: string[];
   contract?: boolean;
   internship?: boolean;
+  activeRoleIndex?: number;
 };
 
 export const ExperienceInfo = memo(
@@ -26,6 +28,7 @@ export const ExperienceInfo = memo(
     technologies,
     contract = false,
     internship = false,
+    activeRoleIndex,
   }: ExperienceInfoProps) => {
     return (
       <Card className="space-y-6">
@@ -64,28 +67,36 @@ export const ExperienceInfo = memo(
 
         {/* Roles */}
         <div className="space-y-6">
-          {roles.map((role) => (
-            <div
-              key={`${role.title}-${role.startDate.getTime()}`}
-              className="border-accent border-l-2 pl-4"
-            >
-              <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <h3 className="font-semibold text-lg">{role.title}</h3>
-                <span className="text-foreground/60 text-sm">
-                  {formatDateRange(role.startDate, role.endDate)}
-                </span>
+          {roles.map((role, index) => {
+            const isActive = activeRoleIndex === index;
+            return (
+              <div
+                key={`${role.title}-${role.startDate.getTime()}`}
+                className={cn(
+                  "border-l-2 pl-4 transition-all duration-300",
+                  isActive
+                    ? "border-accent border-l-4 shadow-[-5px_0px_5px_-5px_rgba(var(--accent-rgb),0.4)]"
+                    : "border-accent/50",
+                )}
+              >
+                <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                  <h3 className="font-semibold text-lg">{role.title}</h3>
+                  <span className="text-foreground/60 text-sm">
+                    {formatDateRange(role.startDate, role.endDate)}
+                  </span>
+                </div>
+                {role.accomplishments.length > 0 && (
+                  <ul className="list-inside list-disc space-y-2 text-foreground/80">
+                    {role.accomplishments.map((accomplishment) => (
+                      <li key={accomplishment} className="leading-relaxed">
+                        {accomplishment}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
-              {role.accomplishments.length > 0 && (
-                <ul className="list-inside list-disc space-y-2 text-foreground/80">
-                  {role.accomplishments.map((accomplishment) => (
-                    <li key={accomplishment} className="leading-relaxed">
-                      {accomplishment}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Technologies */}
