@@ -558,14 +558,7 @@ export const Timeline = () => {
                 }`}
               >
                 <ExperienceInfo
-                  roles={experience.roles}
-                  companyName={experience.companyName}
-                  companyUrl={experience.companyUrl}
-                  contractCompany={experience.contractCompany}
-                  contractCompanyUrl={experience.contractCompanyUrl}
-                  technologies={experience.technologies}
-                  contract={experience.contract}
-                  internship={experience.internship}
+                  experience={experience}
                   activeRoleIndex={
                     activeCompanyIndex === companyIndex
                       ? (activeRoleIndex[companyIndex] ?? 0)

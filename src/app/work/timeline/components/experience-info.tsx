@@ -3,33 +3,26 @@ import { memo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import type { Role } from "../types";
+import type { TimelineExperience } from "../types";
 import { formatDateRange } from "../utils";
 
 type ExperienceInfoProps = {
-  roles: Role[];
-  companyName: string;
-  companyUrl: string;
-  contractCompany?: string;
-  contractCompanyUrl?: string;
-  technologies: string[];
-  contract?: boolean;
-  internship?: boolean;
+  experience: TimelineExperience;
   activeRoleIndex?: number;
 };
 
 export const ExperienceInfo = memo(
-  ({
-    roles,
-    companyName,
-    companyUrl,
-    contractCompany,
-    contractCompanyUrl,
-    technologies,
-    contract = false,
-    internship = false,
-    activeRoleIndex,
-  }: ExperienceInfoProps) => {
+  ({ experience, activeRoleIndex }: ExperienceInfoProps) => {
+    const {
+      roles,
+      companyName,
+      companyUrl,
+      contractCompany,
+      contractCompanyUrl,
+      technologies,
+      contract = false,
+      internship = false,
+    } = experience;
     return (
       <Card className="space-y-6">
         {/* Company Header */}
