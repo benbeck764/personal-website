@@ -119,8 +119,17 @@ export const Timeline = () => {
       const milestoneIndex = companyIndex * 10 + roleIndex;
       const baseAmplitude = isMobile ? 20 : 40;
       const variation = isMobile ? 5 : 10;
+
+      // Ensure minimum magnitude to keep phoenix away from center line
+      const sineValue = Math.sin(milestoneIndex * 0.8);
+      const minMagnitude = 0.4; // Ensure at least 40% of amplitude away from center
+      const adjustedSine =
+        sineValue >= 0
+          ? Math.max(sineValue, minMagnitude)
+          : Math.min(sineValue, -minMagnitude);
+
       const offset =
-        baseAmplitude * Math.sin(milestoneIndex * 0.8) +
+        baseAmplitude * adjustedSine +
         variation * Math.cos(milestoneIndex * 1.3);
 
       const x = timelineLineX + offset;
@@ -183,8 +192,16 @@ export const Timeline = () => {
       const variation = isMobile ? 5 : 10;
 
       // Use sine wave for smooth weaving, with some randomness per milestone
+      // Ensure minimum magnitude to keep phoenix away from center line
+      const sineValue = Math.sin(milestoneIndex * 0.8);
+      const minMagnitude = 0.4; // Ensure at least 40% of amplitude away from center
+      const adjustedSine =
+        sineValue >= 0
+          ? Math.max(sineValue, minMagnitude)
+          : Math.min(sineValue, -minMagnitude);
+
       const offset =
-        baseAmplitude * Math.sin(milestoneIndex * 0.8) +
+        baseAmplitude * adjustedSine +
         variation * Math.cos(milestoneIndex * 1.3);
 
       const x = timelineLineX + offset;
@@ -343,10 +360,7 @@ export const Timeline = () => {
       {/* Timeline Layout */}
       <div className="grid grid-cols-[60px_1fr] gap-4 md:grid-cols-[7.5%_12.5%_80%] md:gap-4">
         {/* Spacer Column (optional) */}
-        <div
-          className="relative hidden md:block"
-          style={{ minHeight: "100vh" }}
-        />
+        <div className="relative hidden min-h-screen md:block" />
 
         {/* Timeline Column */}
         <div ref={timelineRef} className="relative">
