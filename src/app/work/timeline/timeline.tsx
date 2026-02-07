@@ -128,16 +128,32 @@ export const Timeline = () => {
           ? Math.max(sineValue, minMagnitude)
           : Math.min(sineValue, -minMagnitude);
 
-      const offset =
+      let offset =
         baseAmplitude * adjustedSine +
         variation * Math.cos(milestoneIndex * 1.3);
 
+      // Determine if this is a company milestone or role sub-milestone
+      const experience = experiences[companyIndex];
+      const lastRoleIndex = experience.roles.length - 1;
+      const isCompanyMilestone = roleIndex === lastRoleIndex;
+
+      // Force direction based on milestone type to avoid text overlap
+      // Company milestones have text on left, so phoenix goes right (positive offset)
+      // Role sub-milestones have text on right, so phoenix goes left (negative offset)
+      if (isCompanyMilestone) {
+        // Ensure positive offset and add extra padding for company milestones
+        offset = Math.abs(offset) + (isMobile ? 6 : 12);
+      } else {
+        // Ensure negative offset for role sub-milestones
+        offset = -Math.abs(offset);
+      }
+
       const x = timelineLineX + offset;
 
-      const burstId = `burst-${Date.now()}`;
+      const burstId = crypto.randomUUID();
       setEmberBursts((prev) => [...prev, { id: burstId, x, y }]);
     },
-    [],
+    [experiences],
   );
 
   // Remove ember burst after animation completes
@@ -200,9 +216,23 @@ export const Timeline = () => {
           ? Math.max(sineValue, minMagnitude)
           : Math.min(sineValue, -minMagnitude);
 
-      const offset =
+      let offset =
         baseAmplitude * adjustedSine +
         variation * Math.cos(milestoneIndex * 1.3);
+
+      // Determine if this is a company milestone or role sub-milestone
+      const isCompanyMilestone = activeRoleIdx === lastRoleIndex;
+
+      // Force direction based on milestone type to avoid text overlap
+      // Company milestones have text on left, so phoenix goes right (positive offset)
+      // Role sub-milestones have text on right, so phoenix goes left (negative offset)
+      if (isCompanyMilestone) {
+        // Ensure positive offset and add extra padding for company milestones
+        offset = Math.abs(offset) + (isMobile ? 6 : 12);
+      } else {
+        // Ensure negative offset for role sub-milestones
+        offset = -Math.abs(offset);
+      }
 
       const x = timelineLineX + offset;
 
