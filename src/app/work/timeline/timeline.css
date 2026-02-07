@@ -67,6 +67,34 @@
   animation: timeline-glow 2s ease-in-out infinite;
 }
 
+/* Ashes Animations */
+@keyframes ash-float {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0);
+  }
+  10% {
+    opacity: 0.8;
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--ash-x)), -40px);
+  }
+}
+
+@keyframes ash-glow {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
 /* Custom easing for phoenix flight */
 .duration-800 {
   transition-duration: 800ms;
@@ -105,6 +133,22 @@
     100% {
       opacity: 0;
       transform: translate(0, 0) scale(1);
+    }
+  }
+
+  /* Disable ash animations */
+  @keyframes ash-float {
+    0%,
+    100% {
+      opacity: 0.5;
+      transform: translate(-50%, 0);
+    }
+  }
+
+  @keyframes ash-glow {
+    0%,
+    100% {
+      opacity: 0.3;
     }
   }
 }

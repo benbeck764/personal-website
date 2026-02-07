@@ -1,10 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-
 import "./timeline.css";
 import { Tooltip } from "@/components/ui/tooltip";
 import { AnimatedPhoenix } from "./components/animated-phoenix";
+import { Ashes } from "./components/ashes";
 import { EmberBurst } from "./components/ember-burst";
 import { ExperienceInfo } from "./components/experience-info";
 import { TimelineMilestone } from "./components/timeline-milestone";
@@ -98,20 +98,38 @@ export const Timeline = () => {
   }, [experiences]);
 
   // Spawn ember burst effect
-  const spawnEmberBurst = useCallback((key: MilestoneKey) => {
-    const milestone = milestoneRefs.current.get(key);
-    const container = containerRef.current;
-    if (!milestone || !container) return;
+  const spawnEmberBurst = useCallback(
+    (key: MilestoneKey, companyIndex: number, roleIndex: number) => {
+      const milestone = milestoneRefs.current.get(key);
+      const container = containerRef.current;
+      if (!milestone || !container) return;
 
-    const milestoneRect = milestone.getBoundingClientRect();
-    const containerRect = container.getBoundingClientRect();
+      const milestoneRect = milestone.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
 
-    const x = milestoneRect.left - containerRect.left + milestoneRect.width / 2;
-    const y = milestoneRect.top - containerRect.top + milestoneRect.height / 2;
+      // Get Y position from milestone
+      const y =
+        milestoneRect.top - containerRect.top + milestoneRect.height / 2;
 
-    const burstId = `burst-${Date.now()}`;
-    setEmberBursts((prev) => [...prev, { id: burstId, x, y }]);
-  }, []);
+      // Calculate X position same as phoenix (relative to timeline line with weaving)
+      const isMobile = window.innerWidth < 768;
+      const timelineLineX = isMobile ? 22 : 20;
+
+      // Use same weaving logic as phoenix
+      const milestoneIndex = companyIndex * 10 + roleIndex;
+      const baseAmplitude = isMobile ? 20 : 40;
+      const variation = isMobile ? 5 : 10;
+      const offset =
+        baseAmplitude * Math.sin(milestoneIndex * 0.8) +
+        variation * Math.cos(milestoneIndex * 1.3);
+
+      const x = timelineLineX + offset;
+
+      const burstId = `burst-${Date.now()}`;
+      setEmberBursts((prev) => [...prev, { id: burstId, x, y }]);
+    },
+    [],
+  );
 
   // Remove ember burst after animation completes
   const removeEmberBurst = useCallback((burstId: string) => {
@@ -146,13 +164,30 @@ export const Timeline = () => {
       const milestoneRect = activeMilestone.getBoundingClientRect();
       const containerRect = container.getBoundingClientRect();
 
-      // Center phoenix on milestone
-      // Note: transform origin is "center center", so x/y position the phoenix's center
-      const milestoneCenterX = milestoneRect.left + milestoneRect.width / 2;
+      // Get Y position from milestone
       const milestoneCenterY = milestoneRect.top + milestoneRect.height / 2;
-
-      const x = milestoneCenterX - containerRect.left;
       const y = milestoneCenterY - containerRect.top;
+
+      // Position phoenix relative to timeline line, not milestone button
+      // Timeline line is at left-5.5 (22px) on mobile, left-5 (20px) on desktop
+      const isMobile = window.innerWidth < 768;
+      const timelineLineX = isMobile ? 22 : 20; // Position of timeline line
+
+      // Add horizontal offset for weaving effect
+      // Use milestone index to create variation (unique value per milestone)
+      const milestoneIndex = activeCompanyIndex * 10 + activeRoleIdx;
+
+      // Create weaving pattern using sine wave based on milestone index
+      // Mobile: smaller amplitude (±15-25px), Desktop: larger amplitude (±30-50px)
+      const baseAmplitude = isMobile ? 20 : 40;
+      const variation = isMobile ? 5 : 10;
+
+      // Use sine wave for smooth weaving, with some randomness per milestone
+      const offset =
+        baseAmplitude * Math.sin(milestoneIndex * 0.8) +
+        variation * Math.cos(milestoneIndex * 1.3);
+
+      const x = timelineLineX + offset;
 
       setPhoenixPosition({ x, y });
     }
@@ -174,7 +209,7 @@ export const Timeline = () => {
       calculatePositions();
       updatePhoenixPosition();
       // Spawn ember burst at initial position (latest role of first company)
-      spawnEmberBurst(milestoneKey.role(0, 0));
+      spawnEmberBurst(milestoneKey.role(0, 0), 0, 0);
     }, 150);
 
     return () => {
@@ -285,7 +320,7 @@ export const Timeline = () => {
             roleIndex === lastRoleIndex
               ? milestoneKey.company(companyIndex)
               : milestoneKey.role(companyIndex, roleIndex);
-          spawnEmberBurst(activeMilestoneKey);
+          spawnEmberBurst(activeMilestoneKey, companyIndex, roleIndex);
 
           // Update previous milestone
           prevMilestoneRef.current = { companyIndex, roleIndex };
@@ -306,7 +341,7 @@ export const Timeline = () => {
   return (
     <div ref={containerRef} className="relative w-full">
       {/* Timeline Layout */}
-      <div className="grid grid-cols-[60px_1fr] gap-4 md:grid-cols-[10%_20%_70%] md:gap-4">
+      <div className="grid grid-cols-[60px_1fr] gap-4 md:grid-cols-[7.5%_12.5%_80%] md:gap-4">
         {/* Spacer Column (optional) */}
         <div
           className="relative hidden md:block"
@@ -339,8 +374,8 @@ export const Timeline = () => {
 
                   return position ? (
                     <div
-                      className="absolute"
-                      style={{ top: `${position.top}px`, left: 0 }}
+                      className="absolute left-px"
+                      style={{ top: `${position.top}px` }}
                     >
                       <div className="relative">
                         <Tooltip
@@ -367,6 +402,8 @@ export const Timeline = () => {
                               }));
                               spawnEmberBurst(
                                 milestoneKey.company(companyIndex),
+                                companyIndex,
+                                lastRoleIndex,
                               );
                             }}
                             label={`View ${experience.companyName} - ${experience.roles[lastRoleIndex]?.title || "First Role"}`}
@@ -395,10 +432,9 @@ export const Timeline = () => {
                     return rolePosition ? (
                       <div
                         key={`role-milestone-${experience.id}-${role.title}`}
-                        className="absolute flex items-center gap-2 md:gap-3"
+                        className="absolute left-1.75 flex items-center gap-2 md:left-2.25 md:gap-3"
                         style={{
                           top: `${rolePosition.top}px`,
-                          left: "6px",
                         }}
                       >
                         <Tooltip
@@ -424,6 +460,8 @@ export const Timeline = () => {
                               }));
                               spawnEmberBurst(
                                 milestoneKey.role(companyIndex, roleIndex),
+                                companyIndex,
+                                roleIndex,
                               );
                             }}
                             label={`View ${role.title} role at ${experience.companyName}`}
@@ -452,6 +490,9 @@ export const Timeline = () => {
               onComplete={() => removeEmberBurst(burst.id)}
             />
           ))}
+
+          {/* Ashes at the bottom */}
+          <Ashes />
         </div>
 
         {/* Content Column */}
