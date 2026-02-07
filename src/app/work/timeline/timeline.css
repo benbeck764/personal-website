@@ -101,7 +101,8 @@
 
   /* Disable ember burst animations */
   @keyframes ember-burst {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 0;
       transform: translate(0, 0) scale(1);
     }

@@ -5,7 +5,11 @@ import type { ComponentProps } from "react";
 export const mdxComponents = {
   // Custom link component
   a: ({ href, children, ...props }: ComponentProps<"a">) => {
-    const isInternal = href?.startsWith("/");
+    if (!href) {
+      return <a {...props}>{children}</a>;
+    }
+
+    const isInternal = href.startsWith("/");
 
     if (isInternal) {
       return (
@@ -29,8 +33,8 @@ export const mdxComponents = {
   },
 
   // Custom image component
-  img: ({ src, alt, ...props }: ComponentProps<"img">) => {
-    if (!src) return null;
+  img: ({ src, alt, width, height, ...props }: ComponentProps<"img">) => {
+    if (!src || typeof src !== "string") return null;
     return (
       <Image
         src={src}

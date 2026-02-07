@@ -2,6 +2,7 @@
 
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { TOCHeading } from "@/types/blog";
 
@@ -14,16 +15,16 @@ export function TOCHeader({ headings }: TOCHeaderProps) {
 
   return (
     <div className="mb-8 overflow-hidden rounded-lg border border-border xl:hidden">
-      <button
+      <Button
         onClick={() => setIsOpen(!isOpen)}
+        variant="ghost"
         className="flex w-full items-center justify-between bg-muted p-4"
-        type="button"
       >
         <span className="font-semibold">Table of Contents</span>
         <ChevronDown
           className={cn("h-5 w-5 transition-transform", isOpen && "rotate-180")}
         />
-      </button>
+      </Button>
 
       {isOpen && (
         <ul className="space-y-2 p-4 text-sm">

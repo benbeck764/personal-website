@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Oxanium } from "next/font/google";
-import type { ReactNode } from "react";
+import type { PropsWithChildren } from "react";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import "./globals.css";
@@ -25,11 +25,7 @@ export const metadata: Metadata = {
   description: "Personal website and blog",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<PropsWithChildren>) {
   return (
     <html lang="en" className="scroll-smooth">
       <body

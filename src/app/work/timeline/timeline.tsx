@@ -3,10 +3,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import "./timeline.css";
+import { Tooltip } from "@/components/ui/tooltip";
 import { AnimatedPhoenix } from "./components/animated-phoenix";
 import { EmberBurst } from "./components/ember-burst";
 import { ExperienceInfo } from "./components/experience-info";
-import { MilestoneTooltip } from "./components/milestone-tooltip";
 import { TimelineMilestone } from "./components/timeline-milestone";
 import { experienceTimeline } from "./data";
 import type { MilestoneKey } from "./types";
@@ -336,8 +336,9 @@ export const Timeline = () => {
                       style={{ top: `${position.top}px`, left: 0 }}
                     >
                       <div className="relative">
-                        <MilestoneTooltip
+                        <Tooltip
                           content={`${experience.companyName} - ${experience.roles[lastRoleIndex]?.title || "First Role"}`}
+                          sideOffset={10}
                         >
                           <TimelineMilestone
                             ref={(el) => {
@@ -357,12 +358,14 @@ export const Timeline = () => {
                                 ...prev,
                                 [companyIndex]: lastRoleIndex,
                               }));
-                              spawnEmberBurst(milestoneKey.company(companyIndex));
+                              spawnEmberBurst(
+                                milestoneKey.company(companyIndex),
+                              );
                             }}
                             label={`View ${experience.companyName} - ${experience.roles[lastRoleIndex]?.title || "First Role"}`}
                             variant="company"
                           />
-                        </MilestoneTooltip>
+                        </Tooltip>
                         <span className="-translate-y-1/2 absolute top-1/2 right-[calc(100%+0.75rem)] hidden whitespace-nowrap font-heading text-foreground/70 text-lg tabular-nums md:inline">
                           {formatDate(
                             experience.roles[lastRoleIndex]?.startDate ||
@@ -391,8 +394,9 @@ export const Timeline = () => {
                           left: "6px",
                         }}
                       >
-                        <MilestoneTooltip
+                        <Tooltip
                           content={`${role.title} at ${experience.companyName}`}
+                          sideOffset={10}
                         >
                           <TimelineMilestone
                             ref={(el) => {
@@ -418,7 +422,7 @@ export const Timeline = () => {
                             label={`View ${role.title} role at ${experience.companyName}`}
                             variant="role"
                           />
-                        </MilestoneTooltip>
+                        </Tooltip>
                         <span className="hidden font-heading font-medium text-foreground/60 text-sm tabular-nums md:inline">
                           {formatDate(role.startDate)}
                         </span>

@@ -1,10 +1,9 @@
-import type { ReactNode } from "react";
+import type { PropsWithChildren } from "react";
 import { cn } from "@/lib/utils";
 
-type ContainerProps = {
-  children: ReactNode;
+type ContainerProps = PropsWithChildren<{
   className?: string;
-};
+}>;
 
 export const Container = ({ children, className }: ContainerProps) => {
   return (
