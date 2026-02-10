@@ -23,10 +23,11 @@ export const ExperienceInfo = memo(
       contract = false,
       internship = false,
     } = experience;
+
     return (
-      <Card className="space-y-6">
-        {/* Company Header */}
-        <div>
+      <Card className="space-y-6 bg-card">
+        {/* Company Header - Sticky */}
+        <div className="sticky top-0 z-10 -m-6 mb-0 p-6 pb-4 border-b border-transparent bg-card/100 not-only:border-border">
           <div className="mb-2 flex items-center gap-2">
             <a
               href={companyUrl}
@@ -59,7 +60,7 @@ export const ExperienceInfo = memo(
         </div>
 
         {/* Roles */}
-        <div className="space-y-6">
+        <div className="space-y-6 pt-6">
           {roles.map((role, index) => {
             const isActive = activeRoleIndex === index;
             return (

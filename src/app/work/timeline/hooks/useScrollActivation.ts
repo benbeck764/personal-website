@@ -43,7 +43,7 @@ export const useScrollActivation = (
 
   // Scroll-based activation: Find nearest milestone to viewport center
   useEffect(() => {
-    if (milestonePositions.size === 0) return;
+    if (!milestonePositions.size) return;
 
     const handleScrollActivation = () => {
       // If at the very top of the page, keep the default state (latest role of latest company)
@@ -138,7 +138,7 @@ export const useScrollActivation = (
       }
     };
 
-    // Run on scroll only (no initial timeout to prevent jump on load)
+    // Run on scroll only (scroll is always at top on mount due to Timeline component)
     window.addEventListener("scroll", handleScrollActivation, {
       passive: true,
     });

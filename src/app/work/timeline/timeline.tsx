@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import "./timeline.css";
 import { Tooltip } from "@/components/ui/tooltip";
 import { AnimatedPhoenix } from "./components/animated-phoenix";
@@ -21,9 +21,9 @@ export const Timeline = () => {
   // Milestone positions & refs
   const {
     milestonePositions,
+    timelineHeight,
     containerRef,
     timelineRef,
-    cardRefs,
     milestoneRefs,
     calculatePositions,
   } = useMilestonePositions(experiences);
@@ -48,6 +48,16 @@ export const Timeline = () => {
     containerRef,
     milestoneRefs,
   });
+
+  // Card ref for active card
+  const activeCardRef = useRef<HTMLDivElement>(null);
+
+
+  // Force scroll to top on mount/refresh
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
 
   // Spawn ember burst when active milestone changes from scroll
   useEffect(() => {
@@ -236,35 +246,24 @@ export const Timeline = () => {
           <Ashes />
         </div>
 
-        {/* Content Column */}
-        <div className="space-y-12">
-          {experiences.map((experience, companyIndex) => (
-            <div
-              key={experience.id}
-              ref={(el) => {
-                cardRefs.current.set(`card-${companyIndex}`, el);
-              }}
-              className="relative"
-            >
-              {/* Experience Content */}
-              <div
-                className={`transition-all duration-300 ${
-                  activeCompanyIndex === companyIndex
-                    ? "opacity-100"
-                    : "opacity-50 hover:opacity-75"
-                }`}
-              >
-                <ExperienceInfo
-                  experience={experience}
-                  activeRoleIndex={
-                    activeCompanyIndex === companyIndex
-                      ? (activeRoleIndex[companyIndex] ?? 0)
-                      : undefined
-                  }
-                />
-              </div>
-            </div>
-          ))}
+        {/* Content Column - Single active card sticky */}
+        <div
+          className="relative"
+          style={{
+            minHeight: `${timelineHeight}px`,
+          }}
+        >
+          {/* Active card */}
+          <div
+            ref={activeCardRef}
+            className="sticky top-20 z-20 mb-12 bg-background shadow-lg transition-all duration-300"
+          >
+            <ExperienceInfo
+              key={`${activeCompanyIndex}-${activeRoleIndex[activeCompanyIndex] ?? 0}`}
+              experience={experiences[activeCompanyIndex]}
+              activeRoleIndex={activeRoleIndex[activeCompanyIndex] ?? 0}
+            />
+          </div>
         </div>
       </div>
     </div>
