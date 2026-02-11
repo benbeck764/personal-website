@@ -52,12 +52,10 @@ export const Timeline = () => {
   // Card ref for active card
   const activeCardRef = useRef<HTMLDivElement>(null);
 
-
   // Force scroll to top on mount/refresh
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
 
   // Spawn ember burst when active milestone changes from scroll
   useEffect(() => {

@@ -9,19 +9,29 @@ export const experienceTimeline: TimelineExperience[] = [
       {
         title: "Principal Software Engineer",
         accomplishments: [
-          "Spearheading the architectural design and development of the next-generation user interface for the Mosaic Software Platform, a React (TypeScript) based command & control/mission planning software platform.",
+          "Continuing to spearhead the front-end architectural design and development of the Mosaic Software Platform, a command & control/mission planning software platform.",
+          "Aligning front-end technical strategy with long-term business goals.",
+          "Overhauled the front-end engineering hiring and onboarding process during a period of 2x headcount growth.",
         ],
         startDate: new Date(2025, 7),
       },
       {
         title: "Staff Software Engineer",
-        accomplishments: [],
+        accomplishments: [
+          "Continued to establish front-end best practices and architectural standards for the Mosaic Software Platform, ensuring scalability, maintainability, and performance.",
+          "Collaborated closely with product/design, QA, backend and space operations teams to ensure architecture met performance, scalability, and user experience requirements.",
+          "Mentored new React developers, fostering a culture of continuous learning and knowledge sharing within the team.",
+        ],
         startDate: new Date(2025, 1),
         endDate: new Date(2025, 7),
       },
       {
         title: "Senior Software Engineer",
-        accomplishments: [],
+        accomplishments: [
+          "Architected the strategic migration of a legacy Unity application to a React/TypeScript stack, ensuring a seamless transition while maintaining core functionalities.",
+          "Formalized the enterprise design system and UI pattern library, significantly improving development efficiency and consistency across the platform.",
+          "Integrated React Three Fiber (R3F) to maintain high-fidelity 3D visualization while leveraging React’s reconciliation for UI overlays.",
+        ],
         startDate: new Date(2023, 11),
         endDate: new Date(2025, 1),
       },
@@ -29,7 +39,15 @@ export const experienceTimeline: TimelineExperience[] = [
     startYear: 2023,
     endYear: null,
     companyUrl: "https://www.trueanomaly.space",
-    technologies: ["TypeScript", "React", "Jotai", "D3.js", "three.js"],
+    technologies: [
+      "TypeScript",
+      "React",
+      "Jotai",
+      "Tailwind CSS",
+      "Base UI",
+      "D3.js",
+      "React Three Fiber",
+    ],
   },
   {
     id: "benbeck-dev",
@@ -38,10 +56,11 @@ export const experienceTimeline: TimelineExperience[] = [
       {
         title: "Software Architect",
         accomplishments: [
-          "Designed and implemented an efficient ordering portal for a major food distribution company, improving their operational efficiency.",
-          "Led and supervised a dynamic team of 5-10 developers, providing guidance and support to enhance their professional growth.",
-          "Created a suite of strategic business intelligence tools for a specialized data consultancy firm, enabling data-driven decision making.",
-          "Established a robust ecosystem of nearly a dozen Power BI apps, empowering users with comprehensive data visualization and analysis capabilities.",
+          "Architected the PFG CustomerFirst ordering interface utilizing advanced state-management patterns to synchronize complex multi-line orders with real-time inventory updates.",
+          "Established and led the front-end technical governance for a team of 10 engineers, implementing a modular component architecture and strict TypeScript configurations to ensure code reusability and type safety.",
+          "",
+          "Architected and developed a suite of web-based configuration tools for PowerBI.Tips, enabling developers to programmatically generate and manage complex Power BI theme files and report templates.",
+          "Implemented complex state-management patterns to handle real-time UI previews and dynamic code generation, allowing users to export production-ready .pbit and .json files directly from the browser.",
         ],
         startDate: new Date(2021, 0),
         endDate: new Date(2023, 11),

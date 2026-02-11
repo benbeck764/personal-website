@@ -27,7 +27,7 @@ export const ExperienceInfo = memo(
     return (
       <Card className="space-y-6 bg-card">
         {/* Company Header - Sticky */}
-        <div className="sticky top-0 z-10 -m-6 mb-0 p-6 pb-4 border-b border-transparent bg-card/100 not-only:border-border">
+        <div className="-m-6 sticky top-0 z-10 mb-0 border-transparent not-only:border-border border-b bg-card/100 p-6 pb-4">
           <div className="mb-2 flex items-center gap-2">
             <a
               href={companyUrl}
@@ -81,11 +81,14 @@ export const ExperienceInfo = memo(
                 </div>
                 {role.accomplishments.length > 0 && (
                   <ul className="list-inside list-disc space-y-2 text-foreground/80">
-                    {role.accomplishments.map((accomplishment) => (
-                      <li key={accomplishment} className="leading-relaxed">
-                        {accomplishment}
-                      </li>
-                    ))}
+                    {role.accomplishments.map((accomplishment) => {
+                      if (!accomplishment.trim()) return <br />; // Empty accomplishment is a spacer, render as line break
+                      return (
+                        <li key={accomplishment} className="leading-relaxed">
+                          {accomplishment}
+                        </li>
+                      );
+                    })}
                   </ul>
                 )}
               </div>
