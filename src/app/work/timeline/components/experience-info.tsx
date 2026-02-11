@@ -81,8 +81,16 @@ export const ExperienceInfo = memo(
                 </div>
                 {role.accomplishments.length > 0 && (
                   <ul className="list-inside list-disc space-y-2 text-foreground/80">
-                    {role.accomplishments.map((accomplishment) => {
-                      if (!accomplishment.trim()) return <br />; // Empty accomplishment is a spacer, render as line break
+                    {role.accomplishments.map((accomplishment, id) => {
+                      if (!accomplishment.trim())
+                        return (
+                          <br
+                            key={`spacer-${
+                              // biome-ignore lint/suspicious/noArrayIndexKey: <spacer>
+                              id
+                            }`}
+                          />
+                        ); // Empty accomplishment is a spacer, render as line break
                       return (
                         <li key={accomplishment} className="leading-relaxed">
                           {accomplishment}
