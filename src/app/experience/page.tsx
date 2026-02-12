@@ -2,8 +2,8 @@ import { Container } from "@/components/layout/container";
 import { Timeline } from "./timeline/timeline";
 
 export const metadata = {
-  title: "Work",
-  description: "Projects and experience",
+  title: "Experience",
+  description: "Resume and work experience of Ben Beck, Software Engineer",
 };
 
 export default function WorkPage() {
