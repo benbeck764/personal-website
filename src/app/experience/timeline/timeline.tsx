@@ -19,35 +19,19 @@ export const Timeline = () => {
   const experiences = experienceTimeline;
 
   // Milestone positions & refs
-  const {
-    milestonePositions,
-    timelineHeight,
-    containerRef,
-    timelineRef,
-    milestoneRefs,
-    calculatePositions,
-  } = useMilestonePositions(experiences);
+  const { milestonePositions, timelineHeight, containerRef, timelineRef, milestoneRefs, calculatePositions } =
+    useMilestonePositions(experiences);
 
   // Scroll-based activation (manages active state)
-  const {
-    activeCompanyIndex,
-    activeRoleIndex,
-    setActiveCompanyIndex,
-    setActiveRoleIndex,
-    lastActiveMilestone,
-  } = useScrollActivation(experiences, milestonePositions, milestoneRefs);
+  const { activeCompanyIndex, activeRoleIndex, setActiveCompanyIndex, setActiveRoleIndex, lastActiveMilestone } =
+    useScrollActivation(experiences, milestonePositions, milestoneRefs);
 
   // Phoenix animation & ember bursts (uses active state from activation)
-  const {
-    phoenixPosition,
-    emberBursts,
-    spawnEmberBurst,
-    removeEmberBurst,
-    updatePhoenixPosition,
-  } = usePhoenixAnimation(activeCompanyIndex, activeRoleIndex, experiences, {
-    containerRef,
-    milestoneRefs,
-  });
+  const { phoenixPosition, emberBursts, spawnEmberBurst, removeEmberBurst, updatePhoenixPosition } =
+    usePhoenixAnimation(activeCompanyIndex, activeRoleIndex, experiences, {
+      containerRef,
+      milestoneRefs,
+    });
 
   // Card ref for active card
   const activeCardRef = useRef<HTMLDivElement>(null);
@@ -55,6 +39,7 @@ export const Timeline = () => {
   // Force scroll to top on mount/refresh
   useEffect(() => {
     window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
   }, []);
 
   // Spawn ember burst when active milestone changes from scroll
@@ -104,9 +89,7 @@ export const Timeline = () => {
 
           {/* Company Milestones */}
           {experiences.map((experience, companyIndex) => {
-            const companyPosition = milestonePositions.get(
-              milestoneKey.company(companyIndex),
-            );
+            const companyPosition = milestonePositions.get(milestoneKey.company(companyIndex));
 
             return (
               <div key={`company-milestone-${experience.id}`}>
@@ -116,16 +99,11 @@ export const Timeline = () => {
                   // For multiple roles, use last role's position; for single role, use company position
                   const position =
                     experience.roles.length > 1
-                      ? milestonePositions.get(
-                          milestoneKey.role(companyIndex, lastRoleIndex),
-                        )
+                      ? milestonePositions.get(milestoneKey.role(companyIndex, lastRoleIndex))
                       : companyPosition;
 
                   return position ? (
-                    <div
-                      className="absolute left-px"
-                      style={{ top: `${position.top}px` }}
-                    >
+                    <div className="absolute left-px" style={{ top: `${position.top}px` }}>
                       <div className="relative">
                         <Tooltip
                           content={`${experience.companyName} - ${experience.roles[lastRoleIndex]?.title || "First Role"}`}
@@ -133,15 +111,11 @@ export const Timeline = () => {
                         >
                           <TimelineMilestone
                             ref={(el) => {
-                              milestoneRefs.current.set(
-                                milestoneKey.company(companyIndex),
-                                el,
-                              );
+                              milestoneRefs.current.set(milestoneKey.company(companyIndex), el);
                             }}
                             isActive={
                               activeCompanyIndex === companyIndex &&
-                              (activeRoleIndex[companyIndex] ?? 0) ===
-                                lastRoleIndex
+                              (activeRoleIndex[companyIndex] ?? 0) === lastRoleIndex
                             }
                             onClick={() => {
                               setActiveCompanyIndex(companyIndex);
@@ -149,21 +123,14 @@ export const Timeline = () => {
                                 ...prev,
                                 [companyIndex]: lastRoleIndex,
                               }));
-                              spawnEmberBurst(
-                                milestoneKey.company(companyIndex),
-                                companyIndex,
-                                lastRoleIndex,
-                              );
+                              spawnEmberBurst(milestoneKey.company(companyIndex), companyIndex, lastRoleIndex);
                             }}
                             label={`View ${experience.companyName} - ${experience.roles[lastRoleIndex]?.title || "First Role"}`}
                             variant="company"
                           />
                         </Tooltip>
                         <span className="-translate-y-1/2 absolute top-1/2 right-[calc(100%+0.75rem)] hidden whitespace-nowrap font-heading text-foreground/70 text-lg tabular-nums md:inline">
-                          {formatDate(
-                            experience.roles[lastRoleIndex]?.startDate ||
-                              new Date(),
-                          )}
+                          {formatDate(experience.roles[lastRoleIndex]?.startDate || new Date())}
                         </span>
                       </div>
                     </div>
@@ -174,9 +141,7 @@ export const Timeline = () => {
                 {experience.roles.length > 1 &&
                   experience.roles.slice(0, -1).map((role, roleIndex) => {
                     // roleIndex is 0 to length-2
-                    const rolePosition = milestonePositions.get(
-                      milestoneKey.role(companyIndex, roleIndex),
-                    );
+                    const rolePosition = milestonePositions.get(milestoneKey.role(companyIndex, roleIndex));
 
                     return rolePosition ? (
                       <div
@@ -186,20 +151,13 @@ export const Timeline = () => {
                           top: `${rolePosition.top}px`,
                         }}
                       >
-                        <Tooltip
-                          content={`${role.title} at ${experience.companyName}`}
-                          sideOffset={10}
-                        >
+                        <Tooltip content={`${role.title} at ${experience.companyName}`} sideOffset={10}>
                           <TimelineMilestone
                             ref={(el) => {
-                              milestoneRefs.current.set(
-                                milestoneKey.role(companyIndex, roleIndex),
-                                el,
-                              );
+                              milestoneRefs.current.set(milestoneKey.role(companyIndex, roleIndex), el);
                             }}
                             isActive={
-                              activeCompanyIndex === companyIndex &&
-                              (activeRoleIndex[companyIndex] ?? 0) === roleIndex
+                              activeCompanyIndex === companyIndex && (activeRoleIndex[companyIndex] ?? 0) === roleIndex
                             }
                             onClick={() => {
                               setActiveCompanyIndex(companyIndex);
@@ -207,11 +165,7 @@ export const Timeline = () => {
                                 ...prev,
                                 [companyIndex]: roleIndex,
                               }));
-                              spawnEmberBurst(
-                                milestoneKey.role(companyIndex, roleIndex),
-                                companyIndex,
-                                roleIndex,
-                              );
+                              spawnEmberBurst(milestoneKey.role(companyIndex, roleIndex), companyIndex, roleIndex);
                             }}
                             label={`View ${role.title} role at ${experience.companyName}`}
                             variant="role"
@@ -232,12 +186,7 @@ export const Timeline = () => {
 
           {/* Ember Bursts */}
           {emberBursts.map((burst) => (
-            <EmberBurst
-              key={burst.id}
-              x={burst.x}
-              y={burst.y}
-              onComplete={() => removeEmberBurst(burst.id)}
-            />
+            <EmberBurst key={burst.id} x={burst.x} y={burst.y} onComplete={() => removeEmberBurst(burst.id)} />
           ))}
 
           {/* Ashes at the bottom */}
