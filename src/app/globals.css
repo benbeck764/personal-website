@@ -1,6 +1,9 @@
 @import "tailwindcss";
 
 :root {
+  /* Layout */
+  --header-height: 4rem;
+
   /* Greyscale Base */
   --background: #0c0a09;
   --surface: #1c1917;

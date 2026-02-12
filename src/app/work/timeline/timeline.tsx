@@ -254,7 +254,7 @@ export const Timeline = () => {
           {/* Active card */}
           <div
             ref={activeCardRef}
-            className="sticky top-20 z-20 mb-12 bg-background shadow-lg transition-all duration-300"
+            className="sticky top-[calc(var(--header-height)+5rem)] z-20 mb-12 max-h-[calc(100vh-var(--header-height)-6rem)] overflow-y-auto bg-background shadow-lg transition-all duration-300"
           >
             <ExperienceInfo
               key={`${activeCompanyIndex}-${activeRoleIndex[activeCompanyIndex] ?? 0}`}
