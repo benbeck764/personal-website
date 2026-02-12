@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Oxanium } from "next/font/google";
 import type { PropsWithChildren } from "react";
@@ -36,6 +37,7 @@ export default function RootLayout({ children }: Readonly<PropsWithChildren>) {
           <main className="flex-1">{children}</main>
           <Footer />
         </div>
+        <Analytics />
       </body>
     </html>
   );
