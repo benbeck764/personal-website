@@ -18,9 +18,9 @@ export function Header() {
               <span className="font-bold font-heading text-xl leading-none">
                 Ben Beck
               </span>
-              <span className="font-heading font-medium text-accent text-xs tracking-wider">
+              {/* <span className="font-heading font-medium text-accent text-xs tracking-wider">
                 PARADIGM
-              </span>
+              </span> */}
             </div>
           </Link>
 

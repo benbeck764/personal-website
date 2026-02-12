@@ -7,10 +7,7 @@ export function Footer() {
     <footer className="mt-24 border-border border-t">
       <Container>
         <div className="py-8 text-center text-foreground/60 text-sm">
-          <p>
-            © {currentYear} Ben Beck | Paradigm. Built with Next.js and Tailwind
-            CSS.
-          </p>
+          <p>© {currentYear} Ben Beck</p>
         </div>
       </Container>
     </footer>
