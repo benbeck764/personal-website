@@ -11,59 +11,56 @@ type ExperienceInfoProps = {
   activeRoleIndex?: number;
 };
 
-export const ExperienceInfo = memo(
-  ({ experience, activeRoleIndex }: ExperienceInfoProps) => {
-    const {
-      roles,
-      companyName,
-      companyUrl,
-      contractCompany,
-      contractCompanyUrl,
-      technologies,
-      contract = false,
-      internship = false,
-    } = experience;
+export const ExperienceInfo = memo(({ experience, activeRoleIndex }: ExperienceInfoProps) => {
+  const {
+    roles,
+    companyName,
+    companyUrl,
+    contractCompany,
+    contractCompanyUrl,
+    technologies,
+    contract = false,
+    internship = false,
+  } = experience;
 
-    return (
-      <Card className="flex flex-col overflow-hidden bg-card">
-        {/* Company Header - Fixed */}
-        <div className="-m-6 z-10 mb-0 shrink-0 border-border border-b bg-card p-6 pb-4">
-          <div className="mb-2 flex items-center gap-2">
-            <a
-              href={companyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 font-bold text-2xl text-accent hover:underline"
-            >
-              {companyName}
-              <ExternalLink className="h-5 w-5" />
-            </a>
-            {(contract || internship) && (
-              <Badge variant={internship ? "secondary" : "outline"}>
-                {internship ? "Internship" : "Contract"}
-              </Badge>
-            )}
-          </div>
-          {contract && contractCompany && contractCompanyUrl && (
-            <p className="text-foreground/70 text-sm">
-              via{" "}
-              <a
-                href={contractCompanyUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-accent hover:underline"
-              >
-                {contractCompany}
-              </a>
-            </p>
+  return (
+    <Card className="flex flex-col overflow-hidden bg-card pr-2 pl-4">
+      {/* Company Header - Fixed */}
+      <div className="-m-6 z-10 mb-0 shrink-0 border-border border-b bg-card p-4 py-4 pl-6">
+        <div className="mb-2 flex items-center gap-2">
+          <a
+            href={companyUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 font-bold text-2xl text-accent hover:underline"
+          >
+            {companyName}
+            <ExternalLink className="h-5 w-5" />
+          </a>
+          {(contract || internship) && (
+            <Badge variant={internship ? "secondary" : "outline"}>{internship ? "Internship" : "Contract"}</Badge>
           )}
         </div>
+        {contract && contractCompany && contractCompanyUrl && (
+          <p className="text-foreground/70 text-sm">
+            via{" "}
+            <a
+              href={contractCompanyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent hover:underline"
+            >
+              {contractCompany}
+            </a>
+          </p>
+        )}
+      </div>
 
-        {/* Scrollable Content */}
-        <div className="min-h-0 flex-1 space-y-6 overflow-y-auto p-6 pt-6">
-          {/* Roles */}
-          <div className="space-y-6">
-            {roles.map((role, index) => {
+      {/* Scrollable Content */}
+      <div className="min-h-0 flex-1 space-y-6 overflow-y-auto pt-6 pr-4">
+        {/* Roles */}
+        <div className="space-y-6">
+          {roles.map((role, index) => {
             const isActive = activeRoleIndex === index;
             return (
               <div
@@ -77,9 +74,7 @@ export const ExperienceInfo = memo(
               >
                 <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                   <h3 className="font-semibold text-lg">{role.title}</h3>
-                  <span className="text-foreground/60 text-sm">
-                    {formatDateRange(role.startDate, role.endDate)}
-                  </span>
+                  <span className="text-foreground/60 text-sm">{formatDateRange(role.startDate, role.endDate)}</span>
                 </div>
                 {role.accomplishments.length > 0 && (
                   <ul className="list-inside list-disc space-y-2 text-foreground/80">
@@ -103,24 +98,21 @@ export const ExperienceInfo = memo(
                 )}
               </div>
             );
-            })}
-          </div>
+          })}
+        </div>
 
-          {/* Technologies */}
-          <div>
-            <h4 className="mb-3 font-semibold text-foreground/70 text-sm uppercase tracking-wider">
-              Technologies
-            </h4>
-            <div className="flex flex-wrap gap-2">
-              {technologies.map((tech) => (
-                <Badge key={tech} variant="secondary">
-                  {tech}
-                </Badge>
-              ))}
-            </div>
+        {/* Technologies */}
+        <div>
+          <h4 className="mb-3 font-semibold text-foreground/70 text-sm uppercase tracking-wider">Technologies</h4>
+          <div className="flex flex-wrap gap-2">
+            {technologies.map((tech) => (
+              <Badge key={tech} variant="secondary">
+                {tech}
+              </Badge>
+            ))}
           </div>
         </div>
-      </Card>
-    );
-  },
-);
+      </div>
+    </Card>
+  );
+});
