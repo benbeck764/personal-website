@@ -1,19 +1,12 @@
-import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { PostCard } from "@/components/blog/post-card";
 import { PhoenixIcon } from "@/components/icons/phoenix-icon";
-import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
-import {
-  getAllPosts,
-  getPostWithSubposts,
-  hasSubposts,
-} from "@/lib/blog/posts";
+//import { getAllPosts } from "@/lib/blog/posts";
 
 export default function HomePage() {
-  const allPosts = getAllPosts();
-  const allPostIds = allPosts.map((p) => p.id);
-  const recentPosts = allPosts.slice(0, 3);
+  // const allPosts = getAllPosts();
+  // const allPostIds = allPosts.map((p) => p.id);
+  // const recentPosts = allPosts.slice(0, 3);
 
   return (
     <>
@@ -67,29 +60,29 @@ export default function HomePage() {
         <h1 className="mb-4 font-bold font-heading text-5xl text-phoenix-gradient md:text-6xl">
           Ben Beck
         </h1>
-        <p className="mb-3 font-heading text-accent text-xl tracking-wider">
-          PARADIGM
+        <p className="mb-3 font-heading text-accent text-xl uppercase tracking-wider">
+          Software Engineer
         </p>
-        <p className="mb-8 font-light text-foreground/60 text-lg uppercase tracking-[0.35em]">
+        {/* <p className="mb-8 font-light text-foreground/60 text-lg uppercase tracking-[0.35em]">
           Rise · Evolve · Transform
-        </p>
+        </p> */}
         <div className="flex justify-center gap-4">
-          <Link href="/blog">
+          {/* <Link href="/blog">
             <Button size="lg" className="phoenix-glow">
               Read Blog
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-          </Link>
-          <Link href="/work">
+          </Link> */}
+          <Link href="/experience">
             <Button size="lg" variant="outline">
-              View Work
+              View Experience
             </Button>
           </Link>
         </div>
       </section>
 
       {/* Recent Posts Section */}
-      <Container>
+      {/* <Container>
         {recentPosts.length > 0 && (
           <section className="py-16">
             <div className="mb-8 flex items-center justify-between">
@@ -115,7 +108,7 @@ export default function HomePage() {
             </div>
           </section>
         )}
-      </Container>
+      </Container> */}
     </>
   );
 }

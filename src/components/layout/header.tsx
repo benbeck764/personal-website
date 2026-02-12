@@ -4,8 +4,8 @@ import { Container } from "./container";
 
 export function Header() {
   const navItems = [
-    { label: "Blog", href: "/blog" },
-    { label: "Work", href: "/work" },
+    //{ label: "Blog", href: "/blog" },
+    { label: "Experience", href: "/experience" },
   ];
 
   return (
