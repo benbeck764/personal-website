@@ -25,9 +25,9 @@ export const ExperienceInfo = memo(
     } = experience;
 
     return (
-      <Card className="space-y-6 bg-card">
-        {/* Company Header - Sticky */}
-        <div className="-m-6 sticky top-0 z-10 mb-0 border-transparent not-only:border-border border-b bg-card/100 p-6 pb-4">
+      <Card className="flex flex-col overflow-hidden bg-card">
+        {/* Company Header - Fixed */}
+        <div className="-m-6 z-10 mb-0 shrink-0 border-border border-b bg-card p-6 pb-4">
           <div className="mb-2 flex items-center gap-2">
             <a
               href={companyUrl}
@@ -59,9 +59,11 @@ export const ExperienceInfo = memo(
           )}
         </div>
 
-        {/* Roles */}
-        <div className="space-y-6 pt-6">
-          {roles.map((role, index) => {
+        {/* Scrollable Content */}
+        <div className="min-h-0 flex-1 space-y-6 overflow-y-auto p-6 pt-6">
+          {/* Roles */}
+          <div className="space-y-6">
+            {roles.map((role, index) => {
             const isActive = activeRoleIndex === index;
             return (
               <div
@@ -101,20 +103,21 @@ export const ExperienceInfo = memo(
                 )}
               </div>
             );
-          })}
-        </div>
+            })}
+          </div>
 
-        {/* Technologies */}
-        <div>
-          <h4 className="mb-3 font-semibold text-foreground/70 text-sm uppercase tracking-wider">
-            Technologies
-          </h4>
-          <div className="flex flex-wrap gap-2">
-            {technologies.map((tech) => (
-              <Badge key={tech} variant="secondary">
-                {tech}
-              </Badge>
-            ))}
+          {/* Technologies */}
+          <div>
+            <h4 className="mb-3 font-semibold text-foreground/70 text-sm uppercase tracking-wider">
+              Technologies
+            </h4>
+            <div className="flex flex-wrap gap-2">
+              {technologies.map((tech) => (
+                <Badge key={tech} variant="secondary">
+                  {tech}
+                </Badge>
+              ))}
+            </div>
           </div>
         </div>
       </Card>

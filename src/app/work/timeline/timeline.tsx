@@ -245,16 +245,11 @@ export const Timeline = () => {
         </div>
 
         {/* Content Column - Single active card sticky */}
-        <div
-          className="relative"
-          style={{
-            minHeight: `${timelineHeight}px`,
-          }}
-        >
+        <div className="relative" style={{ minHeight: `${timelineHeight}px` }}>
           {/* Active card */}
           <div
             ref={activeCardRef}
-            className="sticky top-[calc(var(--header-height)+5rem)] z-20 mb-12 max-h-[calc(100vh-var(--header-height)-6rem)] overflow-y-auto bg-background shadow-lg transition-all duration-300"
+            className="sticky top-[calc(var(--header-height)+5rem)] z-20 mb-12 flex max-h-[calc(100vh-var(--header-height)-5rem-1rem)] flex-col bg-background shadow-lg transition-all duration-300"
           >
             <ExperienceInfo
               key={`${activeCompanyIndex}-${activeRoleIndex[activeCompanyIndex] ?? 0}`}
