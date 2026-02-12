@@ -86,6 +86,8 @@ export const Timeline = () => {
         <div ref={timelineRef} className="relative">
           {/* Timeline Line */}
           <div className="absolute top-0 bottom-0 left-5.5 w-0.5 bg-border md:left-5" />
+          {/* Shimmer Effect */}
+          <div className="timeline-shimmer absolute top-0 bottom-0 left-5.5 w-0.5 md:left-5" />
 
           {/* Company Milestones */}
           {experiences.map((experience, companyIndex) => {

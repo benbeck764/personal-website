@@ -95,6 +95,32 @@
   }
 }
 
+/* Timeline Shimmer Effect */
+@keyframes timeline-shimmer {
+  0% {
+    background-position: 0% 200%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+.timeline-shimmer {
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 40%,
+    rgba(var(--accent-rgb), 0.3) 45%,
+    rgba(var(--accent-rgb), 0.6) 50%,
+    rgba(var(--accent-rgb), 0.3) 55%,
+    transparent 60%,
+    transparent 100%
+  );
+  background-size: 100% 50%;
+  animation: timeline-shimmer 4s linear infinite;
+  pointer-events: none;
+}
+
 /* Custom easing for phoenix flight */
 .duration-800 {
   transition-duration: 800ms;
@@ -150,5 +176,11 @@
     100% {
       opacity: 0.3;
     }
+  }
+
+  /* Disable timeline shimmer */
+  .timeline-shimmer {
+    animation: none !important;
+    background: none !important;
   }
 }
