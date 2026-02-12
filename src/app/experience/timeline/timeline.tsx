@@ -129,7 +129,12 @@ export const Timeline = () => {
                             variant="company"
                           />
                         </Tooltip>
+                        {/* Desktop date - to the left */}
                         <span className="-translate-y-1/2 absolute top-1/2 right-[calc(100%+0.75rem)] hidden whitespace-nowrap font-heading text-foreground/70 text-lg tabular-nums md:inline">
+                          {formatDate(experience.roles[lastRoleIndex]?.startDate || new Date())}
+                        </span>
+                        {/* Mobile date - below milestone */}
+                        <span className="-translate-x-1/2 absolute top-full left-1/2 mt-1 whitespace-nowrap font-heading text-foreground/70 text-xs tabular-nums md:hidden">
                           {formatDate(experience.roles[lastRoleIndex]?.startDate || new Date())}
                         </span>
                       </div>
@@ -146,34 +151,41 @@ export const Timeline = () => {
                     return rolePosition ? (
                       <div
                         key={`role-milestone-${experience.id}-${role.title}`}
-                        className="absolute left-1.75 flex items-center gap-2 md:left-2.25 md:gap-3"
+                        className="absolute left-1.75 md:left-2.25"
                         style={{
                           top: `${rolePosition.top}px`,
                         }}
                       >
-                        <Tooltip content={`${role.title} at ${experience.companyName}`} sideOffset={10}>
-                          <TimelineMilestone
-                            ref={(el) => {
-                              milestoneRefs.current.set(milestoneKey.role(companyIndex, roleIndex), el);
-                            }}
-                            isActive={
-                              activeCompanyIndex === companyIndex && (activeRoleIndex[companyIndex] ?? 0) === roleIndex
-                            }
-                            onClick={() => {
-                              setActiveCompanyIndex(companyIndex);
-                              setActiveRoleIndex((prev) => ({
-                                ...prev,
-                                [companyIndex]: roleIndex,
-                              }));
-                              spawnEmberBurst(milestoneKey.role(companyIndex, roleIndex), companyIndex, roleIndex);
-                            }}
-                            label={`View ${role.title} role at ${experience.companyName}`}
-                            variant="role"
-                          />
-                        </Tooltip>
-                        <span className="hidden font-heading font-medium text-foreground/60 text-sm tabular-nums md:inline">
-                          {formatDate(role.startDate)}
-                        </span>
+                        <div className="relative flex items-center gap-2 md:gap-3">
+                          <Tooltip content={`${role.title} at ${experience.companyName}`} sideOffset={10}>
+                            <TimelineMilestone
+                              ref={(el) => {
+                                milestoneRefs.current.set(milestoneKey.role(companyIndex, roleIndex), el);
+                              }}
+                              isActive={
+                                activeCompanyIndex === companyIndex && (activeRoleIndex[companyIndex] ?? 0) === roleIndex
+                              }
+                              onClick={() => {
+                                setActiveCompanyIndex(companyIndex);
+                                setActiveRoleIndex((prev) => ({
+                                  ...prev,
+                                  [companyIndex]: roleIndex,
+                                }));
+                                spawnEmberBurst(milestoneKey.role(companyIndex, roleIndex), companyIndex, roleIndex);
+                              }}
+                              label={`View ${role.title} role at ${experience.companyName}`}
+                              variant="role"
+                            />
+                          </Tooltip>
+                          {/* Desktop date - inline */}
+                          <span className="hidden font-heading font-medium text-foreground/60 text-sm tabular-nums md:inline">
+                            {formatDate(role.startDate)}
+                          </span>
+                          {/* Mobile date - below milestone */}
+                          <span className="-translate-x-1/2 absolute top-full left-1/2 mt-1 whitespace-nowrap font-heading text-foreground/70 text-xs tabular-nums md:hidden">
+                            {formatDate(role.startDate)}
+                          </span>
+                        </div>
                       </div>
                     ) : null;
                   })}
